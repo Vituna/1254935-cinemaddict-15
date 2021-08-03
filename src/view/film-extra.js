@@ -1,11 +1,9 @@
-import {createFilmCardTemplate} from './film-card';
+import {generateExtraFilmsList} from './films.js';
 
 const createNameExtraMarkup = () => (
   `<h2 class="films-list__title">Most commented</h2>
-
   <div class="films-list__container">
-    ${createFilmCardTemplate()}
-    ${createFilmCardTemplate()}
+    ${generateExtraFilmsList()}
   </div>`
 );
 

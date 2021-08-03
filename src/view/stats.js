@@ -47,8 +47,8 @@ const createStatsTemplate = () => (
   </section>`
 );
 
-const createMoviesInsideTemplate = () => (
-  '<p>130 291 movies inside</p>'
+const createMoviesInsideTemplate = (amout) => (
+  `<p>${amout} movies inside</p>`
 );
 
 export {createStatsTemplate, createMoviesInsideTemplate};
