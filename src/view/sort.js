@@ -1,9 +1,16 @@
-const createSortTemplate = () => (
-  `<ul class="sort">
-    <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-    <li><a href="#" class="sort__button">Sort by date</a></li>
-    <li><a href="#" class="sort__button ">Sort by rating</a></li>
-  </ul>`
-);
+const SORT_ITEM_ACTIVE = 'sort__button--active';
+
+const isActiveClassName = (condition) => condition ? SORT_ITEM_ACTIVE : '';
+
+const createSortItemTemplate = (sortType, isChecked) => `
+  <li>
+    <a href="#${sortType}" class="sort__button ${isActiveClassName(isChecked)}">Sort by ${sortType}</a>
+  </li>
+`;
+
+const createSortTemplate = (sortTypes = [], activeSortType) => {
+  const sortItemsTemplate = sortTypes.map((sortType) => createSortItemTemplate(sortType, sortType === activeSortType)).join('');
+  return `<ul class="sort">${sortItemsTemplate}</ul>`;
+};
 
 export {createSortTemplate};
