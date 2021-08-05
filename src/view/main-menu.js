@@ -1,5 +1,5 @@
 const NAVIGATION_ITEM_ACTIVE = 'main-navigation__item--active';
-const setActiveClassName = (condition) => condition ? NAVIGATION_ITEM_ACTIVE : '';
+const isActiveClassName = (condition) => condition ? NAVIGATION_ITEM_ACTIVE : '';
 
 const filterNameToTextContent = {
   all: 'All movies',
@@ -13,7 +13,7 @@ const createFilterCountTemplate = (count) => ` <span class="main-navigation__ite
 const createFiltersTemplate = (filter, isChecked) => {
   const {name, count} = filter;
   const textContent = `${filterNameToTextContent[name]}${name !== 'all' ? createFilterCountTemplate(count) : ''}`;
-  return `<a href="#${name}" class="main-navigation__item ${setActiveClassName(isChecked)}">${textContent}</a>`;
+  return `<a href="#${name}" class="main-navigation__item ${isActiveClassName(isChecked)}">${textContent}</a>`;
 };
 
 const createMainMenuTemplate = (filters = [], activeItem) => {
@@ -24,7 +24,7 @@ const createMainMenuTemplate = (filters = [], activeItem) => {
       <div class="main-navigation__items">
         ${filtersTemplate}
       </div>
-      <a href="#stats" class="main-navigation__additional ${setActiveClassName(isStatsChecked)}">Stats</a>
+      <a href="#stats" class="main-navigation__additional ${isActiveClassName(isStatsChecked)}">Stats</a>
     </nav>
   `;
 };

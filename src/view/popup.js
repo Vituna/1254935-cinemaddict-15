@@ -1,30 +1,18 @@
 import dayjs from 'dayjs';
-import {createComentsTemplate} from './popub-comment.js';
-import {generateCountData} from '../utils.js';
+import {createCommentsTemplate} from './popup-comment.js';
 import {films} from './films.js';
 
-const createGenreMarkup = (genre) => {
-  const {customObject} = genre;
-  return `<span class="film-details__genre">
-    ${customObject}
+const createGenreMarkup = (genre) =>
+  `<span class="film-details__genre">
+    ${genre}
   </span>
   `;
-};
 
 const createPopupTemplate = () => {
   const {id, filmInfo, comments} = films[0];
   const date = dayjs(filmInfo.release.date).format('D MMMM YYYY');
 
-  const genreObject = () => {
-    const customArr = [];
-    for (let i = 0; i < filmInfo.genre.length; i++) {
-      const customObject = filmInfo.genre[i];
-      customArr.push({customObject});
-    }
-    return customArr;
-  };
-
-  const generateGenre = () =>  generateCountData(filmInfo.genre.length, createGenreMarkup, genreObject());
+  const generateGenre = () => filmInfo.genre.map((nameGenre) => createGenreMarkup(nameGenre));
 
   return `<section class="film-details" id="${id}">
   <form class="film-details__inner" action="" method="get">
@@ -95,7 +83,7 @@ const createPopupTemplate = () => {
         <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
       </section>
     </div>
-    ${createComentsTemplate(comments)}
+    ${createCommentsTemplate(comments)}
   </form>
 </section>`;
 };

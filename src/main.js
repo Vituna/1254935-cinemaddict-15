@@ -4,7 +4,7 @@ import {createProfileTemplate} from './view/profile-user.js';
 import {createSortTemplate} from './view/sort.js';
 import {createFilmsTemplate} from './view/films.js';
 import {createMoviesInsideTemplate} from './view/stats.js';
-import {createPopupTemplate} from './view/popub.js';
+import {createPopupTemplate} from './view/popup.js';
 import {createFilmCardTemplate} from './view/film-card.js';
 import {films} from './view/films.js';
 

@@ -1,10 +1,10 @@
 const SORT_ITEM_ACTIVE = 'sort__button--active';
 
-const setActiveClassName = (condition) => condition ? SORT_ITEM_ACTIVE : '';
+const isActiveClassName = (condition) => condition ? SORT_ITEM_ACTIVE : '';
 
 const createSortItemTemplate = (sortType, isChecked) => `
   <li>
-    <a href="#${sortType}" class="sort__button ${setActiveClassName(isChecked)}">Sort by ${sortType}</a>
+    <a href="#${sortType}" class="sort__button ${isActiveClassName(isChecked)}">Sort by ${sortType}</a>
   </li>
 `;
 

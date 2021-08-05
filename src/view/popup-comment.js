@@ -1,15 +1,6 @@
 import {emojiMock} from '../mock/film-card.js';
 import {generateCountData} from '../utils.js';
 
-const emojiObject = () => {
-  const customArr = [];
-  for (let i = 0; i < emojiMock.length; i++) {
-    const customObject = emojiMock[i];
-    customArr.push({customObject});
-  }
-  return customArr;
-};
-
 const createCommentsMarkup = (commit) => {
   const {id, author, comment, data, emotion} = commit;
   return `<ul class="film-details__comments-list" id="${id}">
@@ -29,19 +20,16 @@ const createCommentsMarkup = (commit) => {
   </ul>`;
 };
 
-const createEmojiMarkup = (emojis) => {
-  const {customObject} = emojis;
-
-  return `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+const createEmojiMarkup = (emojis) =>
+  `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
     <label class="film-details__emoji-label" for="emoji-angry">
-      <img src="./images/emoji/${customObject}.png" width="30" height="30" alt="emoji">
+      <img src="./images/emoji/${emojis}.png" width="30" height="30" alt="emoji">
     </label>`;
-};
 
-const createComentsTemplate = (comments) => {
+const createCommentsTemplate = (comments) => {
 
   const generateFilmsList = () =>  generateCountData(comments.length, createCommentsMarkup, comments);
-  const generateEmojiMarkup = () => generateCountData(4, createEmojiMarkup, emojiObject());
+  const generateEmojiMarkup = () => emojiMock.map((nameEmoji) => createEmojiMarkup(nameEmoji));
 
   return `<div class="film-details__bottom-container">
     <section class="film-details__comments-wrap">
@@ -62,4 +50,4 @@ const createComentsTemplate = (comments) => {
   </div>`;
 };
 
-export {createComentsTemplate};
+export {createCommentsTemplate};
