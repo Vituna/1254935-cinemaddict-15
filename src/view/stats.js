@@ -51,4 +51,4 @@ const createMoviesInsideTemplate = (amout) => (
   `<p>${amout} movies inside</p>`
 );
 
-export {createStatsTemplate, createMoviesInsideTemplate};
+export {createMoviesInsideTemplate};

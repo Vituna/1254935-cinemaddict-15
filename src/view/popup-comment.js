@@ -1,5 +1,5 @@
 import {emojiMock} from '../mock/film-card.js';
-import {generateCountData} from '../utils.js';
+import {createElement} from '../utils.js';
 
 const createCommentsMarkup = (commit) => {
   const {id, author, comment, data, emotion} = commit;
@@ -28,14 +28,17 @@ const createEmojiMarkup = (emojis) =>
 
 const createCommentsTemplate = (comments) => {
 
-  const generateFilmsList = () =>  generateCountData(comments.length, createCommentsMarkup, comments);
+  // const generateFilmsList = () =>  generateCountData(comments.length, createCommentsMarkup, comments);
   const generateEmojiMarkup = () => emojiMock.map((nameEmoji) => createEmojiMarkup(nameEmoji));
+  const commentItemsTemplate = comments
+    .filter((item) => comments.some((comment) => item.id === comment))
+    .map((item) => createCommentsMarkup(item));
+
 
   return `<div class="film-details__bottom-container">
     <section class="film-details__comments-wrap">
-      <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
-      ${generateFilmsList()}
-
+      <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentItemsTemplate.length}</span></h3>
+      ${commentItemsTemplate.join('')}
       <div class="film-details__new-comment">
         <div class="film-details__add-emoji-label"></div>
 
@@ -50,4 +53,30 @@ const createCommentsTemplate = (comments) => {
   </div>`;
 };
 
-export {createCommentsTemplate};
+export default class CommentList {
+  constructor(film, comments) {
+    this._film = film;
+    this._comments = comments;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createCommentsTemplate(this._film, this._comments);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    if (this._element) {
+      this._element.parentNode.removeChild(this._element);
+    }
+
+    this._element = null;
+  }
+}

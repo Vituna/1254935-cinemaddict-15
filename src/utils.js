@@ -61,15 +61,15 @@ const generateCountData = (limit, component, date) => {
 };
 
 const filterNameToCountFilms = {
-  all: (films) => films.length,
-  watchlist: (films) => films
-    .filter((film) => film.userDetails.isToWatch)
+  'All movies': (films) => films.filter((film) => film),
+  'Watchlist': (films) => films
+    .filter((film) => film.userDetails.watchlist)
     .length,
-  history: (films) => films
-    .filter((film) => film.userDetails.isWatched)
+  'History': (films) => films
+    .filter((film) => film.userDetails.alreadyWatched)
     .length,
-  favorites: (films) => films
-    .filter((film) => film.userDetails.isFavorite)
+  'Favorites': (films) => films
+    .filter((film) => film.userDetails.favorite)
     .length,
 };
 
@@ -80,7 +80,28 @@ const generateFilters = (films) => Object
     count: countFilms(films),
   }));
 
-const getFilterCountByName = (filters, filterName) => filters.find(({ name }) => name === filterName).count;
+// const getFilterCountByName = (filters, filterName) => filters.find(({ name }) => name === filterName).count;
+
+const renderElement = (container, element, place) => {
+  switch (place) {
+    case InsertPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case InsertPosition.AFTEREND:
+      container.prepend(element);
+      break;
+    case InsertPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
+const createElement = (template) => {
+  const newElement = document.createElement('div'); // 1
+  newElement.innerHTML = template; // 2
+
+  return newElement.firstChild; // 3
+};
 
 
-export {CARD_COUNT, InsertPosition, render, generateData, generateDate, getRandomInteger, getRandomNonRepeatingNumbers, getRandomFloat, getRandomComments, generateCountData, generateFilters, getFilterCountByName};
+export {CARD_COUNT, InsertPosition, render, generateData, generateDate, getRandomInteger, getRandomNonRepeatingNumbers, getRandomFloat, getRandomComments, generateCountData, generateFilters, renderElement, createElement};

@@ -1,4 +1,4 @@
-import {generateData, generateDate, getRandomInteger, getRandomNonRepeatingNumbers, getRandomFloat, getRandomComments} from '../utils.js';
+import {generateData, generateDate, getRandomInteger, getRandomFloat, getRandomComments} from '../utils.js';
 
 const titleMock = [
   'All movies. Upcoming',
@@ -79,8 +79,8 @@ export const emojiMock = [
   'smile',
 ];
 
-const createComment = (index) => ({
-  id: index + 1,
+const createComment = (id) => ({
+  id,
   author: generateData(autorMock),
   comment: generateData(commentsMock),
   date: '2019-05-11T16:12:32.554Z',
@@ -89,12 +89,12 @@ const createComment = (index) => ({
 
 const getIndexes = (count) => [...Array(count).keys()];
 
-const generateFilmCard = () => {
+const generateFilmCard = (id) => {
   const dueData = generateDate();
   const similarComments = getIndexes(getRandomInteger(0, 5)).map(createComment);
 
   return {
-    id: getRandomNonRepeatingNumbers(0, 20),
+    id,
     comments: similarComments,
     filmInfo: {
       title: generateData(titleMock),
@@ -126,4 +126,4 @@ const generateFilmCard = () => {
   };
 };
 
-export {generateFilmCard};
+export {generateFilmCard, createComment};
