@@ -1,4 +1,4 @@
-import { createElement } from '../utils.js';
+import {createElement} from '../utils.js';
 
 const SORT_ITEM_ACTIVE = 'sort__button--active';
 

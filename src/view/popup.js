@@ -1,7 +1,5 @@
 import dayjs from 'dayjs';
-// import {createCommentsTemplate} from './popup-comment.js';
-import { createElement } from '../utils.js';
-
+import {createElement} from '../utils.js';
 
 const createGenreMarkup = (genre) =>
   `<span class="film-details__genre">
@@ -10,7 +8,7 @@ const createGenreMarkup = (genre) =>
   `;
 
 const createPopupTemplate = (film) => {
-  const {id, filmInfo} = film[0];
+  const {id, filmInfo} = film;
 
   const date = dayjs(filmInfo.release.date).format('D MMMM YYYY');
 
@@ -79,11 +77,6 @@ const createPopupTemplate = (film) => {
         </div>
       </div>
 
-      <section class="film-details__controls">
-        <button type="button" class="film-details__control-button film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
-        <button type="button" class="film-details__control-button film-details__control-button--active film-details__control-button--watched" id="watched" name="watched">Already watched</button>
-        <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
-      </section>
     </div>
   </form>
 </section>`;

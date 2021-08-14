@@ -1,5 +1,4 @@
-import { createElement } from '../utils.js';
-
+import {createElement} from '../utils.js';
 
 const createFilmCardTemplate = (film) => {
   const commentsLenght = film.comments.length;

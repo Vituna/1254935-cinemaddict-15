@@ -8,10 +8,6 @@ const InsertPosition = {
   BEFOREEND: 'beforeend',
 };
 
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
-
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -61,7 +57,7 @@ const generateCountData = (limit, component, date) => {
 };
 
 const filterNameToCountFilms = {
-  'All movies': (films) => films.filter((film) => film),
+  'All movies': (films) => films.length,
   'Watchlist': (films) => films
     .filter((film) => film.userDetails.watchlist)
     .length,
@@ -80,9 +76,7 @@ const generateFilters = (films) => Object
     count: countFilms(films),
   }));
 
-// const getFilterCountByName = (filters, filterName) => filters.find(({ name }) => name === filterName).count;
-
-const renderElement = (container, element, place) => {
+const render = (container, element, place) => {
   switch (place) {
     case InsertPosition.AFTERBEGIN:
       container.prepend(element);
@@ -104,4 +98,4 @@ const createElement = (template) => {
 };
 
 
-export {CARD_COUNT, InsertPosition, render, generateData, generateDate, getRandomInteger, getRandomNonRepeatingNumbers, getRandomFloat, getRandomComments, generateCountData, generateFilters, renderElement, createElement};
+export {CARD_COUNT, InsertPosition, render, generateData, generateDate, getRandomInteger, getRandomNonRepeatingNumbers, getRandomFloat, getRandomComments, generateCountData, generateFilters, createElement};

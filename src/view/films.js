@@ -1,4 +1,4 @@
-import { createElement } from '../utils.js';
+import {createElement} from '../utils.js';
 
 const createFilmsTemplate = () =>
   `<section class="films">
@@ -9,7 +9,6 @@ const createFilmsTemplate = () =>
       </div>
     </section>
   </section>`;
-
 
 export default class FilmsList {
   constructor() {

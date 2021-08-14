@@ -1,5 +1,4 @@
-import { createElement } from '../utils.js';
-
+import {createElement} from '../utils.js';
 
 const filmCommentedTemplate = () => (
   `<section class="films-list films-list--extra">

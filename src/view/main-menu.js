@@ -1,7 +1,7 @@
-import { createElement } from '../utils.js';
+import {createElement} from '../utils.js';
 
 const createFilterCountTemplate = (filters) => {
-  const { name, count } = filters;
+  const {name, count} = filters;
 
   const checkFilmCount = (filmCount) =>
     filmCount >= 0
@@ -11,14 +11,13 @@ const createFilterCountTemplate = (filters) => {
   return (
     `<a href="#${name}" class="main-navigation__item">
       ${name}
-      <!-- Не показывать счетчик фильмов у пункта "All movies" когда фильмов 0 -->
       ${name === 'All movies' ? '' : checkFilmCount(count)}
     </a>`
   );
 };
 
-const createMainMenuTemplate = (filtres) => {
-  const filtersTemplate = filtres.map((item) => createFilterCountTemplate(item)).join('');
+const createMainMenuTemplate = (filtres, films) => {
+  const filtersTemplate = filtres.map((item) => createFilterCountTemplate(item, films)).join('');
 
   return (
     `<nav class="main-navigation">

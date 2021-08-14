@@ -1,5 +1,5 @@
 import {emojiMock} from '../mock/film-card.js';
-import {createElement} from '../utils.js';
+import {createElement, generateCountData} from '../utils.js';
 
 const createCommentsMarkup = (commit) => {
   const {id, author, comment, data, emotion} = commit;
@@ -26,19 +26,15 @@ const createEmojiMarkup = (emojis) =>
       <img src="./images/emoji/${emojis}.png" width="30" height="30" alt="emoji">
     </label>`;
 
-const createCommentsTemplate = (comments) => {
-
-  // const generateFilmsList = () =>  generateCountData(comments.length, createCommentsMarkup, comments);
+const createCommentsTemplate = (film) => {
+  const {comments} = film;
+  const generateFilmsList = () =>  generateCountData(comments.length, createCommentsMarkup, comments);
   const generateEmojiMarkup = () => emojiMock.map((nameEmoji) => createEmojiMarkup(nameEmoji));
-  const commentItemsTemplate = comments
-    .filter((item) => comments.some((comment) => item.id === comment))
-    .map((item) => createCommentsMarkup(item));
-
 
   return `<div class="film-details__bottom-container">
     <section class="film-details__comments-wrap">
-      <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentItemsTemplate.length}</span></h3>
-      ${commentItemsTemplate.join('')}
+      <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
+      ${generateFilmsList()}
       <div class="film-details__new-comment">
         <div class="film-details__add-emoji-label"></div>
 
@@ -54,14 +50,13 @@ const createCommentsTemplate = (comments) => {
 };
 
 export default class CommentList {
-  constructor(film, comments) {
+  constructor(film) {
     this._film = film;
-    this._comments = comments;
     this._element = null;
   }
 
   getTemplate() {
-    return createCommentsTemplate(this._film, this._comments);
+    return createCommentsTemplate(this._film);
   }
 
   getElement() {
