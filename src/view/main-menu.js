@@ -1,32 +1,53 @@
-const NAVIGATION_ITEM_ACTIVE = 'main-navigation__item--active';
-const isActiveClassName = (condition) => condition ? NAVIGATION_ITEM_ACTIVE : '';
+import {createElement} from '../utils.js';
 
-const filterNameToTextContent = {
-  all: 'All movies',
-  watchlist: 'Watchlist',
-  history: 'History',
-  favorites: 'Favorites',
+const createFilterCountTemplate = (filters) => {
+  const {name, count} = filters;
+
+  const checkFilmCount = (filmCount) =>
+    filmCount >= 0
+      ? `<span class="main-navigation__item-count">${filmCount}</span>`
+      : '';
+
+  return (
+    `<a href="#${name}" class="main-navigation__item">
+      ${name}
+      ${name === 'All movies' ? '' : checkFilmCount(count)}
+    </a>`
+  );
 };
 
-const createFilterCountTemplate = (count) => ` <span class="main-navigation__item-count">${count}</span>`;
+const createMainMenuTemplate = (filtres, films) => {
+  const filtersTemplate = filtres.map((item) => createFilterCountTemplate(item, films)).join('');
 
-const createFiltersTemplate = (filter, isChecked) => {
-  const {name, count} = filter;
-  const textContent = `${filterNameToTextContent[name]}${name !== 'all' ? createFilterCountTemplate(count) : ''}`;
-  return `<a href="#${name}" class="main-navigation__item ${isActiveClassName(isChecked)}">${textContent}</a>`;
-};
-
-const createMainMenuTemplate = (filters = [], activeItem) => {
-  const isStatsChecked = activeItem === 'stats';
-  const filtersTemplate = filters.map((filter) => createFiltersTemplate(filter, filter.name === activeItem)).join('');
-  return `
-    <nav class="main-navigation">
+  return (
+    `<nav class="main-navigation">
       <div class="main-navigation__items">
         ${filtersTemplate}
       </div>
-      <a href="#stats" class="main-navigation__additional ${isActiveClassName(isStatsChecked)}">Stats</a>
-    </nav>
-  `;
+      <a href="#stats" class="main-navigation__additional">Stats</a>
+    </nav>`
+  );
 };
 
-export {createMainMenuTemplate};
+export default class Menu {
+  constructor(filters) {
+    this._filters = filters;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMainMenuTemplate(this._filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

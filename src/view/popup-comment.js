@@ -1,5 +1,5 @@
 import {emojiMock} from '../mock/film-card.js';
-import {generateCountData} from '../utils.js';
+import {createElement, generateCountData} from '../utils.js';
 
 const createCommentsMarkup = (commit) => {
   const {id, author, comment, data, emotion} = commit;
@@ -26,8 +26,8 @@ const createEmojiMarkup = (emojis) =>
       <img src="./images/emoji/${emojis}.png" width="30" height="30" alt="emoji">
     </label>`;
 
-const createCommentsTemplate = (comments) => {
-
+const createCommentsTemplate = (film) => {
+  const {comments} = film;
   const generateFilmsList = () =>  generateCountData(comments.length, createCommentsMarkup, comments);
   const generateEmojiMarkup = () => emojiMock.map((nameEmoji) => createEmojiMarkup(nameEmoji));
 
@@ -35,7 +35,6 @@ const createCommentsTemplate = (comments) => {
     <section class="film-details__comments-wrap">
       <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
       ${generateFilmsList()}
-
       <div class="film-details__new-comment">
         <div class="film-details__add-emoji-label"></div>
 
@@ -50,4 +49,29 @@ const createCommentsTemplate = (comments) => {
   </div>`;
 };
 
-export {createCommentsTemplate};
+export default class CommentList {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createCommentsTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    if (this._element) {
+      this._element.parentNode.removeChild(this._element);
+    }
+
+    this._element = null;
+  }
+}

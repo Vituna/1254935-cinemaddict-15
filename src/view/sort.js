@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 const SORT_ITEM_ACTIVE = 'sort__button--active';
 
 const isActiveClassName = (condition) => condition ? SORT_ITEM_ACTIVE : '';
@@ -13,4 +15,29 @@ const createSortTemplate = (sortTypes = [], activeSortType) => {
   return `<ul class="sort">${sortItemsTemplate}</ul>`;
 };
 
-export {createSortTemplate};
+export default class SortFilmList {
+  constructor(SORT_TYPES) {
+    this.sort = SORT_TYPES;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSortTemplate(this.sort, this.sort[0]);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    if (this._element) {
+      this._element.parentNode.removeChild(this._element);
+    }
+
+    this._element = null;
+  }
+}
