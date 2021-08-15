@@ -13,11 +13,12 @@ import FilmPopup from './view/popup.js';
 import FilmControls from './view/film-details-control.js';
 import FooterStats from './view/footer-stats.js';
 import CommentList from './view/popup-comment';
+import NoFilms from './view/no-films.js';
 
 const FILMS_STEP = 5;
 const SORT_TYPES = ['default', 'date', 'rating'];
 
-const FILMS_LIST_COUNT = 20;
+const FILMS_LIST_COUNT = 0;
 
 const films = new Array(FILMS_LIST_COUNT).fill().map((item, index) => generateFilmCard(index + 1));
 const filters = generateFilters(films);
@@ -38,8 +39,10 @@ const siteFooterElement = document.querySelector('.footer');
 
 render(siteHeaderElement, new Profile().getElement(), InsertPosition.BEFOREEND);
 render(siteMainElement, new Menu(filters, films).getElement(), InsertPosition.BEFOREEND);
-render(siteMainElement, new SortFilmList(SORT_TYPES, SORT_TYPES[0]).getElement(), InsertPosition.BEFOREEND);
-render(siteMainElement, new FilmsList().getElement(), InsertPosition.BEFOREEND);
+const sortFilmListComponent = new SortFilmList(SORT_TYPES, SORT_TYPES[0]);
+render(siteMainElement, sortFilmListComponent.getElement(), InsertPosition.BEFOREEND);
+const filmListComponent = new FilmsList();
+render(siteMainElement, filmListComponent.getElement(), InsertPosition.BEFOREEND);
 
 const filmContainer = siteMainElement.querySelector('.films');
 
@@ -131,3 +134,11 @@ commentedFilms.forEach((film) => {
 });
 
 render(siteFooterElement, new FooterStats(films).getElement(), InsertPosition.BEFOREEND);
+
+if (films.length <= 0) {
+  sortFilmListComponent.removeElement();
+  filmListRated.removeElement();
+  filmListCommented.removeElement();
+  filmListComponent.removeElement();
+  render(siteMainElement, new NoFilms().getElement(), InsertPosition.BEFOREEND);
+}
