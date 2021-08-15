@@ -1,4 +1,5 @@
-import {InsertPosition, generateFilters, render} from './utils.js';
+import {InsertPosition, generateFilters} from './utils/utils.js';
+import {render, removeComponent} from './utils/render.js';
 import {generateFilmCard} from './mock/film-card.js';
 
 import Menu from './view/main-menu.js';
@@ -18,7 +19,7 @@ import NoFilms from './view/no-films.js';
 const FILMS_STEP = 5;
 const SORT_TYPES = ['default', 'date', 'rating'];
 
-const FILMS_LIST_COUNT = 0;
+const FILMS_LIST_COUNT = 20;
 
 const films = new Array(FILMS_LIST_COUNT).fill().map((item, index) => generateFilmCard(index + 1));
 const filters = generateFilters(films);
@@ -64,6 +65,12 @@ const renderCard = (container, film) => {
   const filmControlsComponent = new FilmControls(film);
   const commentListComponent = new CommentList(film);
 
+  const removeFilmPopup = () => {
+    document.querySelector('body').classList.remove('hide-overflow');
+    filmPopupComponent.removeElement();
+  };
+
+
   const showFilmPopup = (filmData) => {
     render(siteFooterElement, renderFilmPopup(filmData), InsertPosition.AFTEREND);
 
@@ -71,34 +78,30 @@ const renderCard = (container, film) => {
     render(filmDetailsContainer, filmControlsComponent.getElement(), InsertPosition.BEFOREEND);
     render(filmDetailsContainer, commentListComponent.getElement(), InsertPosition.BEFOREEND);
 
-    const closePopupClickHandler = () => {
-      document.querySelector('body').classList.remove('hide-overflow');
-      filmPopupComponent.removeElement();
-    };
+    filmPopupComponent.setClosePopupClickHandler(() => {
+      removeFilmPopup();
+    });
 
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        closePopupClickHandler();
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-    };
-
-    document.addEventListener('keydown', onEscKeyDown);
-
-    filmPopupComponent.getElement()
-      .querySelector('.film-details__close-btn').addEventListener('click', closePopupClickHandler);
+    document.querySelector('body').classList.remove('hide-overflow');
   };
 
-  const openPopupClickHandler = () => {
-    filmPopupComponent.removeElement();
+
+  const closePopupEscKeyHandler = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+
+      removeFilmPopup();
+    }
+  };
+
+  filmComponent.setFilmCardClickHandler(() => {
+    document.addEventListener('keydown', closePopupEscKeyHandler);
+    removeFilmPopup();
+
     showFilmPopup(film);
-  };
+  });
 
-  filmComponent.getElement().querySelector('.film-card__poster')
-    .addEventListener('click', openPopupClickHandler);
-
-  return render(container, filmComponent.getElement(), InsertPosition.BEFOREEND);
+  return render(container, filmComponent, InsertPosition.BEFOREEND);
 };
 
 let renderedFilmsAmount = 0;
@@ -135,10 +138,22 @@ commentedFilms.forEach((film) => {
 
 render(siteFooterElement, new FooterStats(films).getElement(), InsertPosition.BEFOREEND);
 
-if (films.length <= 0) {
-  sortFilmListComponent.removeElement();
-  filmListRated.removeElement();
-  filmListCommented.removeElement();
-  filmListComponent.removeElement();
-  render(siteMainElement, new NoFilms().getElement(), InsertPosition.BEFOREEND);
+// if (films.length <= 0) {
+//   sortFilmListComponent.removeElement();
+//   filmListRated.removeElement();
+//   filmListCommented.removeElement();
+//   filmListComponent.removeElement();
+//   render(siteMainElement, new NoFilms().getElement(), InsertPosition.BEFOREEND);
+// }
+const showEmptyDatabaseMessage = () => {
+  removeComponent(sortFilmListComponent);
+  removeComponent(filmListRated);
+  removeComponent(filmListCommented);
+  removeComponent(filmListComponent);
+
+  render(siteMainElement, new NoFilms(), InsertPosition.BEFOREEND);
+};
+
+if (!films.length) {
+  showEmptyDatabaseMessage();
 }
