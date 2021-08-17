@@ -1,4 +1,4 @@
-import {generateData, generateDate, getRandomInteger, getRandomFloat, getRandomComments} from '../utils.js';
+import {generateData, generateDate, getRandomInteger, getRandomFloat, getRandomComments} from '../utils/utils.js';
 
 const titleMock = [
   'All movies. Upcoming',

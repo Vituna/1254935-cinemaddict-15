@@ -1,5 +1,6 @@
+import AbstractView from './abstract';
 import dayjs from 'dayjs';
-import {createElement} from '../utils.js';
+import {createElement} from '../utils/render.js';
 
 const createGenreMarkup = (genre) =>
   `<span class="film-details__genre">
@@ -82,20 +83,21 @@ const createPopupTemplate = (film) => {
 </section>`;
 };
 
-export default class FilmPopup {
+export default class FilmPopup extends AbstractView {
   constructor() {
-    this._element = null;
+    super();
+
+    this._closePopupClickHandler = this._closePopupClickHandler.bind(this);
   }
 
   getTemplate(film) {
-    document.querySelector('body').classList.add('hide-overflow');
-
     return createPopupTemplate(film);
   }
 
   getElement(film) {
     if (!this._element) {
-      this._element = createElement(this.getTemplate(film));
+      this._film = film;
+      this._element = createElement(this.getTemplate(this._film));
     }
 
     return this._element;
@@ -106,6 +108,21 @@ export default class FilmPopup {
       this._element.parentNode.removeChild(this._element);
     }
 
-    this._element = null;
+    this._film = null;
+    super.removeElement();
+  }
+
+  _closePopupClickHandler(evt) {
+    evt.preventDefault();
+
+    this.removeElement();
+    this._callback.click();
+  }
+
+  setClosePopupClickHandler(callback) {
+    const closeButton = this.renderElement().querySelector('.film-details__close-btn');
+    closeButton.addEventListener('click', this._closePopupClickHandler);
+
+    this._callback.click = callback;
   }
 }

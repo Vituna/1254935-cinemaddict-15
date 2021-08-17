@@ -1,5 +1,6 @@
+import AbstractView from './abstract';
 import {emojiMock} from '../mock/film-card.js';
-import {createElement, generateCountData} from '../utils.js';
+import {generateCountData} from '../utils/utils.js';
 
 const createCommentsMarkup = (commit) => {
   const {id, author, comment, data, emotion} = commit;
@@ -49,29 +50,13 @@ const createCommentsTemplate = (film) => {
   </div>`;
 };
 
-export default class CommentList {
+export default class CommentList extends AbstractView {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
   }
 
   getTemplate() {
     return createCommentsTemplate(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    if (this._element) {
-      this._element.parentNode.removeChild(this._element);
-    }
-
-    this._element = null;
   }
 }

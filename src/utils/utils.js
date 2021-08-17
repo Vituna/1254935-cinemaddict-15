@@ -76,26 +76,5 @@ const generateFilters = (films) => Object
     count: countFilms(films),
   }));
 
-const render = (container, element, place) => {
-  switch (place) {
-    case InsertPosition.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case InsertPosition.AFTEREND:
-      container.prepend(element);
-      break;
-    case InsertPosition.BEFOREEND:
-      container.append(element);
-      break;
-  }
-};
 
-const createElement = (template) => {
-  const newElement = document.createElement('div'); // 1
-  newElement.innerHTML = template; // 2
-
-  return newElement.firstChild; // 3
-};
-
-
-export {CARD_COUNT, InsertPosition, render, generateData, generateDate, getRandomInteger, getRandomNonRepeatingNumbers, getRandomFloat, getRandomComments, generateCountData, generateFilters, createElement};
+export {CARD_COUNT, InsertPosition, generateData, generateDate, getRandomInteger, getRandomNonRepeatingNumbers, getRandomFloat, getRandomComments, generateCountData, generateFilters};
