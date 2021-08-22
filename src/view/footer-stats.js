@@ -1,6 +1,6 @@
 import AbstractView from './abstract';
 
-const createMoviesInsideTemplate = (films) => (
+const createMoviesInsideTemplate = (films = []) => (
   `<section class="footer__statistics">
     <p>${films.length} movies inside</p>
   </section>`

@@ -1,4 +1,5 @@
 import {generateData, generateDate, getRandomInteger, getRandomFloat, getRandomComments} from '../utils/utils.js';
+import { nanoid } from 'nanoid';
 
 const titleMock = [
   'All movies. Upcoming',
@@ -89,12 +90,12 @@ const createComment = (id) => ({
 
 const getIndexes = (count) => [...Array(count).keys()];
 
-const generateFilmCard = (id) => {
+const generateFilmCard = () => {
   const dueData = generateDate();
   const similarComments = getIndexes(getRandomInteger(0, 5)).map(createComment);
 
   return {
-    id,
+    id: nanoid(),
     comments: similarComments,
     filmInfo: {
       title: generateData(titleMock),
@@ -123,6 +124,10 @@ const generateFilmCard = (id) => {
       watchingDate: dueData,
       favorite: Boolean(getRandomInteger(0, 1)),
     },
+    watchlist: Boolean(getRandomInteger(0, 1)),
+    alreadyWatched: Boolean(getRandomInteger(0, 1)),
+    favorite: Boolean(getRandomInteger(0, 1)),
+
   };
 };
 
