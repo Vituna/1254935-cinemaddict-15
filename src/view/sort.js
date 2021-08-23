@@ -1,27 +1,47 @@
 import AbstractView from './abstract';
+import { SortType } from '../utils/utils.js';
 
-const SORT_ITEM_ACTIVE = 'sort__button--active';
-
-const isActiveClassName = (condition) => condition ? SORT_ITEM_ACTIVE : '';
-
-const createSortItemTemplate = (sortType, isChecked) => `
-  <li>
-    <a href="#${sortType}" class="sort__button ${isActiveClassName(isChecked)}">Sort by ${sortType}</a>
-  </li>
-`;
-
-const createSortTemplate = (sortTypes = [], activeSortType) => {
-  const sortItemsTemplate = sortTypes.map((sortType) => createSortItemTemplate(sortType, sortType === activeSortType)).join('');
-  return `<ul class="sort">${sortItemsTemplate}</ul>`;
-};
+const createSortTemplate = () => (
+  `<ul class="sort">
+    <li><a href="#" class="sort__button sort__button--active" data-sort-type="${SortType.DEFAULT}">Sort by default</a></li>
+    <li><a href="#" class="sort__button" data-sort-type="${SortType.DATE}">Sort by date</a></li>
+    <li><a href="#" class="sort__button" data-sort-type="${SortType.RATING}">Sort by rating</a></li>
+  </ul>`
+);
 
 export default class SortFilmList extends AbstractView {
-  constructor(SORT_TYPES) {
+  constructor() {
     super();
-    this.sort = SORT_TYPES;
+
+    this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
+
   }
 
   getTemplate() {
-    return createSortTemplate(this.sort, this.sort[0]);
+    return createSortTemplate();
+  }
+
+  _setCurrentActiveClass(target) {
+    const sortButtons = this.getElement().querySelectorAll('.sort__button');
+
+    sortButtons.forEach((button) => button.classList.remove('sort__button--active'));
+    target.classList.add('sort__button--active');
+  }
+
+  _sortTypeChangeHandler(evt) {
+    const target = evt.target;
+
+    if (target.tagName !== 'A') {
+      return;
+    }
+
+    evt.preventDefault();
+    this._setCurrentActiveClass(target);
+    this._callback.sortTypeChange(target.dataset.sortType);
+  }
+
+  setSortTypeChangeHandler(callback) {
+    this._callback.sortTypeChange = callback;
+    this.getElement().addEventListener('click', this._sortTypeChangeHandler);
   }
 }

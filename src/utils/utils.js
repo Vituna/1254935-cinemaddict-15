@@ -8,6 +8,12 @@ const InsertPosition = {
   BEFOREEND: 'beforeend',
 };
 
+const SortType = {
+  DEFAULT: 'default',
+  DATE: 'date',
+  RATING: 'rating',
+};
+
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -76,5 +82,22 @@ const generateFilters = (films) => Object
     count: countFilms(films),
   }));
 
+const sortByDate = (filmA, filmB) => dayjs(filmB.filmInfo.release.data).diff(dayjs(filmA.filmInfo.release.data));
 
-export {CARD_COUNT, InsertPosition, generateData, generateDate, getRandomInteger, getRandomNonRepeatingNumbers, getRandomFloat, getRandomComments, generateCountData, generateFilters};
+const sortByRating = (filmA, filmB) => (filmB.filmInfo.totalRating > filmA.filmInfo.totalRating) ? 1 : -1;
+
+const updateItem = (items, update) => {
+  const index = items.findIndex((item) => item.id === update.id);
+
+  if (index === -1) {
+    return items;
+  }
+
+  return [
+    ...items.slice(0, index),
+    update,
+    ...items.slice(index + 1),
+  ];
+};
+
+export {CARD_COUNT, InsertPosition, SortType, generateData, generateDate, getRandomInteger, getRandomNonRepeatingNumbers, getRandomFloat, getRandomComments, generateCountData, generateFilters, sortByDate, sortByRating, updateItem};
