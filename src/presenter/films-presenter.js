@@ -15,7 +15,7 @@ import FilmCardPresenter from '../presenter/film-card';
 const FILMS_STEP = 5;
 
 export default class FilmsPresenter {
-  constructor(siteHeaderElement, siteMainElement, siteFooterElement, filtres, films) {
+  constructor(siteHeaderElement, siteMainElement, siteFooterElement, filters, films) {
     this._siteHeaderElement = siteHeaderElement;
     this._siteMainElement = siteMainElement;
     this._siteFooterElement = siteFooterElement;
@@ -27,7 +27,7 @@ export default class FilmsPresenter {
 
 
     this._userProfileComponent = new Profile();
-    this._menuComponent = new Menu(filtres);
+    this._menuComponent = new Menu(filters);
     this._sortListComponent = new SortFilmList();
     this._filmsListComponent = new FilmsList();
     this._filmListRatedComponent = new FilmRated();
@@ -129,23 +129,18 @@ export default class FilmsPresenter {
   }
 
   _renderFilmCard(container, film, type = '') {
-    if (type === 'rated') {
-      const ratedFilmCardPresenter = new FilmCardPresenter(container, this._filmCardChangeHadler);
-      ratedFilmCardPresenter.init(film);
-      this._ratedFilmCardPresenter.set(film.id, ratedFilmCardPresenter);
-      return;
+    const filmCardPresenter = new FilmCardPresenter(container, this._filmCardChangeHadler);
+    filmCardPresenter.init(film);
+    switch(type) {
+      case 'rated' :
+        this._ratedFilmCardPresenter.set(film.id, filmCardPresenter);
+        break;
+      case 'commented' :
+        this._commentedFilmCardPresenter.set(film.id, filmCardPresenter);
+        break;
+      default:
+        this._filmCardPresenter.set(film.id, filmCardPresenter);
     }
-
-    if (type === 'commented') {
-      const commentedFilmCardPresenter = new FilmCardPresenter(container, this._filmCardChangeHadler);
-      commentedFilmCardPresenter.init(film);
-      this._commentedFilmCardPresenter.set(film.id, commentedFilmCardPresenter);
-      return;
-    }
-
-    const mainFilmCardPresenter = new FilmCardPresenter(container, this._filmCardChangeHadler);
-    mainFilmCardPresenter.init(film);
-    this._filmCardPresenter.set(film.id, mainFilmCardPresenter);
   }
 
   _renderFilmCards(container, filmsData, from, to, type) {
@@ -191,7 +186,7 @@ export default class FilmsPresenter {
   _clearMainFilmList() {
     this._filmCardPresenter.forEach((presenter) => presenter.destroy());
     this._filmCardPresenter.clear();
-    this._renderedTaskCount = 8;
+    this._renderedTaskCount = FILMS_STEP;
 
     removeComponent(this._showMoreButtonComponent);
   }

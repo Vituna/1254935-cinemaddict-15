@@ -106,9 +106,9 @@ export default class FilmPopup extends AbstractView {
   constructor(film) {
     super();
     this._film = film;
-    this._viewedClickHadler = this._viewedClickHadler.bind(this);
-    this._favoriteClickHadler = this._favoriteClickHadler.bind(this);
-    this._watchlistClickHadler = this._watchlistClickHadler.bind(this);
+    this._viewedClickHandler = this._viewedClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
     this._closePopupClickHandler = this._closePopupClickHandler.bind(this);
   }
 
@@ -142,17 +142,17 @@ export default class FilmPopup extends AbstractView {
     this._callback.click = callback;
   }
 
-  _viewedClickHadler(evt) {
+  _viewedClickHandler(evt) {
     evt.preventDefault();
     this._callback.viewedClick();
   }
 
-  _favoriteClickHadler(evt) {
+  _favoriteClickHandler(evt) {
     evt.preventDefault();
     this._callback.favoriteClick();
   }
 
-  _watchlistClickHadler(evt) {
+  _watchlistClickHandler(evt) {
     evt.preventDefault();
     this._callback.watchlistClick();
   }
@@ -161,20 +161,20 @@ export default class FilmPopup extends AbstractView {
     this._callback.viewedClick = callback;
     this.getElement()
       .querySelector('.film-details__control-button--watched')
-      .addEventListener('click', this._viewedClickHadler);
+      .addEventListener('click', this._viewedClickHandler);
   }
 
   setFavoriteClickHadler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement()
       .querySelector('.film-details__control-button--favorite')
-      .addEventListener('click', this._favoriteClickHadler);
+      .addEventListener('click', this._favoriteClickHandler);
   }
 
   setWatchlistClickHadler(callback) {
     this._callback.watchlistClick = callback;
     this.getElement()
       .querySelector('.film-details__control-button--watchlist')
-      .addEventListener('click', this._watchlistClickHadler);
+      .addEventListener('click', this._watchlistClickHandler);
   }
 }

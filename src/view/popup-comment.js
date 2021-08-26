@@ -30,7 +30,7 @@ const createEmojiMarkup = (emojis) =>
 const createCommentsTemplate = (film) => {
   const {comments} = film;
   const generateFilmsList = () =>  generateCountData(comments.length, createCommentsMarkup, comments);
-  const generateEmojiMarkup = () => emojiMock.map((nameEmoji) => createEmojiMarkup(nameEmoji));
+  const generateEmojiMarkup = () => emojiMock.map((nameEmoji) => createEmojiMarkup(nameEmoji)).join('');
 
   return `<div class="film-details__bottom-container">
     <section class="film-details__comments-wrap">
