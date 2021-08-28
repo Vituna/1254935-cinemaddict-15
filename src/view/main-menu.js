@@ -16,8 +16,8 @@ const createFilterCountTemplate = (filters) => {
   );
 };
 
-const createMainMenuTemplate = (filtres, films) => {
-  const filtersTemplate = filtres.map((item) => createFilterCountTemplate(item, films)).join('');
+const createMainMenuTemplate = (filters, films) => {
+  const filtersTemplate = filters.map((item) => createFilterCountTemplate(item, films)).join('');
 
   return (
     `<nav class="main-navigation">
