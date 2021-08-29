@@ -84,7 +84,7 @@ const generateFilters = (films) => Object
     count: countFilms(films),
   }));
 
-const sortByDate = (filmA, filmB) => dayjs(filmB.filmInfo.release.data).diff(dayjs(filmA.filmInfo.release.data));
+const sortByDate = (filmA, filmB) => dayjs(filmB.filmInfo.release.date).diff(dayjs(filmA.filmInfo.release.date));
 
 const sortByRating = (filmA, filmB) => (filmB.filmInfo.totalRating > filmA.filmInfo.totalRating) ? 1 : -1;
 
