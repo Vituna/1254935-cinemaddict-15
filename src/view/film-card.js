@@ -25,7 +25,7 @@ const createFilmCardTemplate = (film) => {
       <span class="film-card__duration">${film.filmInfo.runtime}</span>
       <span class="film-card__genre">${film.filmInfo.genre}</span>
     </p>
-    <img src="./images/posters/${film.filmInfo.poster}" alt="" class="film-card__poster">
+    <img src="./images/posters/${film.filmInfo.poster}" alt="" class="film-card__poster" data-popup-open>
     <p class="film-card__description">${film.filmInfo.description}</p>
     <a class="film-card__comments">${commentsLenght}</a>
     <div class="film-card__controls">
@@ -40,9 +40,9 @@ export default class FilmCard extends AbstractView  {
   constructor(film) {
     super();
     this._film = film;
-    this._viewedClickHadler = this._viewedClickHadler.bind(this);
-    this._favoriteClickHadler = this._favoriteClickHadler.bind(this);
-    this._watchlistClickHadler = this._watchlistClickHadler.bind(this);
+    this._viewedClickHandler = this._viewedClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
     this._filmCardClickHandler = this._filmCardClickHandler.bind(this);
   }
 
@@ -51,25 +51,23 @@ export default class FilmCard extends AbstractView  {
   }
 
   _filmCardClickHandler(evt) {
-    const target = evt.target;
-    if (target.matches('.film-card__poster')
-      || target.matches('.film-card__title')
-      || target.matches('.film-card__comments')) {
+    const target = evt.target.dataset.popupOpen;
+    if (typeof target !== 'undefined') {
       this._callback.click();
     }
   }
 
-  _viewedClickHadler(evt) {
+  _viewedClickHandler(evt) {
     evt.preventDefault();
     this._callback.viewedClick();
   }
 
-  _favoriteClickHadler(evt) {
+  _favoriteClickHandler(evt) {
     evt.preventDefault();
     this._callback.favoriteClick();
   }
 
-  _watchlistClickHadler(evt) {
+  _watchlistClickHandler(evt) {
     evt.preventDefault();
     this._callback.watchlistClick();
   }
@@ -79,24 +77,24 @@ export default class FilmCard extends AbstractView  {
     this.getElement().addEventListener('click', this._filmCardClickHandler);
   }
 
-  setViewedClickHadler(callback) {
+  setViewedClickHandler(callback) {
     this._callback.viewedClick = callback;
     this.getElement()
       .querySelector('.film-card__controls-item--mark-as-watched')
-      .addEventListener('click', this._viewedClickHadler);
+      .addEventListener('click', this._viewedClickHandler);
   }
 
-  setFavoriteClickHadler(callback) {
+  setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement()
       .querySelector('.film-card__controls-item--favorite')
-      .addEventListener('click', this._favoriteClickHadler);
+      .addEventListener('click', this._favoriteClickHandler);
   }
 
-  setWatchlistClickHadler(callback) {
+  setWatchlistClickHandler(callback) {
     this._callback.watchlistClick = callback;
     this.getElement()
       .querySelector('.film-card__controls-item--add-to-watchlist')
-      .addEventListener('click', this._watchlistClickHadler);
+      .addEventListener('click', this._watchlistClickHandler);
   }
 }

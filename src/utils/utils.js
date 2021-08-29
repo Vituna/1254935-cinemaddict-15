@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime.js';
+dayjs.extend(relativeTime);
 
 const CARD_COUNT = 5;
 
@@ -65,13 +67,13 @@ const generateCountData = (limit, component, date) => {
 const filterNameToCountFilms = {
   'All movies': (films) => films.length,
   'Watchlist': (films) => films
-    .filter((film) => film.userDetails.watchlist)
+    .filter((film) => film.watchlist)
     .length,
   'History': (films) => films
-    .filter((film) => film.userDetails.alreadyWatched)
+    .filter((film) => film.alreadyWatched)
     .length,
   'Favorites': (films) => films
-    .filter((film) => film.userDetails.favorite)
+    .filter((film) => film.favorite)
     .length,
 };
 
@@ -82,7 +84,7 @@ const generateFilters = (films) => Object
     count: countFilms(films),
   }));
 
-const sortByDate = (filmA, filmB) => dayjs(filmB.filmInfo.release.data).diff(dayjs(filmA.filmInfo.release.data));
+const sortByDate = (filmA, filmB) => dayjs(filmB.filmInfo.release.date).diff(dayjs(filmA.filmInfo.release.date));
 
 const sortByRating = (filmA, filmB) => (filmB.filmInfo.totalRating > filmA.filmInfo.totalRating) ? 1 : -1;
 
@@ -100,4 +102,15 @@ const updateItem = (items, update) => {
   ];
 };
 
-export {CARD_COUNT, InsertPosition, SortType, generateData, generateDate, getRandomInteger, getRandomNonRepeatingNumbers, getRandomFloat, getRandomComments, generateCountData, generateFilters, sortByDate, sortByRating, updateItem};
+const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+
+const CardMode = {
+  OPEN: 'OPEN',
+  CLOSE: 'CLOSE',
+};
+
+const getRelativeTimeFromDate = (date) => dayjs(date).fromNow();
+
+const FILMS_STEP = 5;
+
+export {CARD_COUNT, InsertPosition, SortType, CardMode, FILMS_STEP, generateData, generateDate, getRandomInteger, getRandomNonRepeatingNumbers, getRandomFloat, getRandomComments, generateCountData, generateFilters, sortByDate, sortByRating, updateItem, isEscEvent, getRelativeTimeFromDate};
