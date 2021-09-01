@@ -2,8 +2,8 @@ import {emojiMock} from '../mock/film-card.js';
 import {generateCountData, getRelativeTimeFromDate} from '../utils/utils.js';
 import SmartView from './smart';
 
-const createCommentsMarkup = (commit) => {
-  const {id, author, comment, date, emotion} = commit;
+const createCommentsMarkup = (infoComment) => {
+  const {id, author, comment, date, emotion} = infoComment;
   return `<ul class="film-details__comments-list" id="${id}">
     <li class="film-details__comment">
       <span class="film-details__comment-emoji">
@@ -21,10 +21,10 @@ const createCommentsMarkup = (commit) => {
   </ul>`;
 };
 
-const createEmojiMarkup = (emojis, emojiName) =>
-  `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emojis}" value="${emojis}" ${emojiName === emojis ? 'checked' : ''}>
-    <label class="film-details__emoji-label" for="emoji-${emojis}">
-      <img src="./images/emoji/${emojis}.png" width="30" height="30" alt="emoji">
+const createEmojiMarkup = (emojiName, selectedEmojiName) =>
+  `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emojiName}" value="${emojiName}" ${selectedEmojiName === emojiName ? 'checked' : ''}>
+    <label class="film-details__emoji-label" for="emoji-${emojiName}">
+      <img src="./images/emoji/${emojiName}.png" width="30" height="30" alt="emoji">
     </label>`;
 
 const createCommentsTemplate = (data) => {
@@ -62,7 +62,7 @@ export default class CommentList extends SmartView {
   }
 
   static parseFilmToData(film) {
-    return { ...film, isEmoji: false, emojiName: null};
+    return { ...film, isEmoji: false, emojiName: null, isCommented: false, commentText: '' };
   }
 
   static parseDataToFilm(data) {

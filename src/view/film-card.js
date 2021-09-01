@@ -25,7 +25,7 @@ const createFilmCardTemplate = (film) => {
       <span class="film-card__duration">${film.filmInfo.runtime}</span>
       <span class="film-card__genre">${film.filmInfo.genre}</span>
     </p>
-    <img src="./images/posters/${film.filmInfo.poster}" alt="" class="film-card__poster" data-popup-open>
+    <img src="./images/posters/${film.filmInfo.poster}" alt="" class="film-card__poster" data-is-popup-open>
     <p class="film-card__description">${film.filmInfo.description}</p>
     <a class="film-card__comments">${commentsLenght}</a>
     <div class="film-card__controls">
@@ -51,7 +51,7 @@ export default class FilmCard extends AbstractView  {
   }
 
   _filmCardClickHandler(evt) {
-    const target = evt.target.dataset.popupOpen;
+    const target = evt.target.dataset.isPopupOpen;
     if (typeof target !== 'undefined') {
       this._callback.click();
     }
