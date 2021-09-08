@@ -1,14 +1,9 @@
-import {removeComponent, render, replace} from '../utils/render.js';
 import {isEscEvent} from '../utils/utils.js';
 import {InsertPosition, UpdateType, UserAction, CardMode} from '../utils/const.js';
+import {removeComponent, render, replace} from '../utils/render.js';
 import FilmCardView from '../view/film-card.js';
 import FilmPopupView from '../view/popup.js';
 import CommentsModel from '../model/comments.js';
-
-export const State = {
-  UPDATING: 'UPDATING',
-  ABORTING: 'ABORTING',
-};
 
 export default class FilmCardPresenter {
   constructor(filmContainer, changeData, changeMode, filterType, api) {
@@ -47,13 +42,13 @@ export default class FilmCardPresenter {
     });
 
     const prevFilmCardComponent = this._filmCardComponent;
-
     this._filmCardComponent = new FilmCardView(film);
 
     this._filmCardComponent.setFilmCardClickHandler(() => this._renderFilmPopup(
       film,
       this._commentsModel.getComments(),
     ));
+
     this._filmCardComponent.setViewedClickHandler(this._switchViewedClickHandler);
     this._filmCardComponent.setFavoriteClickHandler(this._switchFavoriteClickHandler);
     this._filmCardComponent.setWatchlistClickHandler(this._switchWatchlistClickHandler);
@@ -66,7 +61,6 @@ export default class FilmCardPresenter {
     if (this._filmContainer.getElement().contains(prevFilmCardComponent.getElement())) {
       replace(this._filmCardComponent, prevFilmCardComponent);
     }
-
     removeComponent(prevFilmCardComponent);
   }
 

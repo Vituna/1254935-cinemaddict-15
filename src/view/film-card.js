@@ -28,7 +28,6 @@ const createFilmCardTemplate = (film) => {
     ? 'film-card__controls-item--mark-as-watched film-card__controls-item--active'
     : 'film-card__controls-item--mark-as-watched';
 
-
   return `<article class="film-card">
       <h3 class="film-card__title"  data-popup-open>${title}</h3>
       <p class="film-card__rating">${filmRating}</p>

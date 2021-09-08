@@ -187,7 +187,6 @@ export default class StatsScreen extends AbstractView {
     if (evt.target.tagName !== 'INPUT') {
       return;
     }
-
     evt.preventDefault();
     this._callback.filterTypeChange(evt.target.value);
   }
@@ -207,7 +206,6 @@ export default class StatsScreen extends AbstractView {
     if (this._statisticCart !== null) {
       this._statisticCart = null;
     }
-
     const statisticCtx = this.getElement().querySelector('.statistic__chart');
     this._statisticCart = renderGenresChart(statisticCtx, this._films);
   }

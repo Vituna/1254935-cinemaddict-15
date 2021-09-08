@@ -33,7 +33,6 @@ export default class Filter {
     if (prevFilterComponent === null && prevProfileComponent === null) {
       render(this._headerContainer, this._profileComponent, InsertPosition.BEFOREEND);
       render(this._filterContainer, this._filterComponent, InsertPosition.BEFOREEND);
-
       return;
     }
 
@@ -47,7 +46,6 @@ export default class Filter {
     if (updateType === UpdateType.INIT) {
       this._filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
     }
-
     this.init();
   }
 
@@ -55,7 +53,6 @@ export default class Filter {
     if (this._filterModel.getFilter() === filterType) {
       return;
     }
-
     this._filterModel.setFilter(UpdateType.MAJOR, filterType);
   }
 

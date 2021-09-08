@@ -4,25 +4,24 @@ import {render, removeComponent} from '../utils/render.js';
 import StatsScreenView from '../view/statistic';
 
 import SortFilmList from '../view/sort.js';
-// import FilmsList from '../view/films.js';
+import FilmSectionView from '../view/film-section';
+import FilmListContainerView from '../view/film-list-container';
+import FilmListView from '../view/film-list';
 import FilmRated from '../view/film-extra-rated.js';
 import FilmCommented from '../view/film-extra-commented.js';
 import ShowMoreButton from '../view/button-show-more.js';
 import FooterStats from '../view/footer-stats.js';
-import NoFilms from '../view/no-films.js';
 import FilmCardPresenter from '../presenter/film-card.js';
+import NoFilms from '../view/no-films.js';
 import PreloaderView from '../view/preloader';
-import FilmSectionView from '../view/film-section';
-import FilmListContainerView from '../view/film-list-container';
-import FilmListView from '../view/film-list';
 
 export default class FilmsPresenter {
   constructor(siteMainElement, siteFooterElement, filmsModel, filterModel, api) {
     this.siteMainElement = siteMainElement;
     this.siteFooterElement = siteFooterElement;
-
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
+    this._api = api;
 
     this._filterType = FilterType.ALL;
     this._currentSortType = SortType.DEFAULT;
@@ -31,7 +30,6 @@ export default class FilmsPresenter {
     this._currentStatsFilter = StatsFilterType.ALL;
 
     this._isLoading = true;
-    this._api = api;
 
     this._filmCardPresenter = new Map();
     this._ratedFilmCardPresenter = new Map();
@@ -52,22 +50,18 @@ export default class FilmsPresenter {
 
     this._viewActionHandler = this._viewActionHandler.bind(this);
     this._modelEventHandler = this._modelEventHandler.bind(this);
-
     this._showMoreButtonClickHandler = this._showMoreButtonClickHandler.bind(this);
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
     this._cardModeChangeHandler = this._cardModeChangeHandler.bind(this);
-
     this._statsFilterChangeHandler = this._statsFilterChangeHandler.bind(this);
   }
 
   init() {
     this._renderFilmsSection();
-
     this._filmsModel.addObserver(this._modelEventHandler);
     this._filterModel.addObserver(this._modelEventHandler);
   }
 
-  // Метод для получения данных из модели
   _getFilms() {
     this._filterType = this._filterModel.getFilter();
     const films = this._filmsModel.getFilms();
@@ -104,14 +98,12 @@ export default class FilmsPresenter {
     }
   }
 
-  // Метод для инициализации презентеров
   _initFilmCardPresenter(presenters, data) {
     if (presenters.has(data.id)) {
       presenters.get(data.id).init(data, data.comments);
     }
   }
 
-  // Метод для обновления модели
   _modelEventHandler(updateType, data) {
     const films = this._filmsModel.getFilms();
     const filtredFilms = filter[FilterType.HISTORY](films);
@@ -147,37 +139,31 @@ export default class FilmsPresenter {
     }
   }
 
-  // Метод для смены модов карточки фильма
   _cardModeChangeHandler() {
     this._filmCardPresenter.forEach((presenter) => presenter.resetView());
     this._ratedFilmCardPresenter.forEach((presenter) => presenter.resetView());
     this._commentedFilmCardPresenter.forEach((presenter) => presenter.resetView());
   }
 
-  // Обработчик для кнопок сортировки фильмов
   _sortTypeChangeHandler(sortType) {
     if (this._currentSortType === sortType) {
       return;
     }
-
     this._currentSortType = sortType;
     this._clearFilmList({ resetFilmCounter: true });
     this._renderFilmsSection();
   }
 
-  // Метод для рендера экрана статистики
   _renderStatsScreen(films) {
     this._statsComponent = new StatsScreenView(
       this._currentProfileRating,
       this._currentStatsFilter,
       films,
     );
-
     this._statsComponent.setFilterTypeChangeHandler(this._statsFilterChangeHandler);
     render(this.siteMainElement, this._statsComponent, InsertPosition.BEFOREEND);
   }
 
-  // Обработчик для смены фильтров статистики
   _statsFilterChangeHandler(value) {
     const films = this._filmsModel.getFilms();
     const filtredFilms = filter[FilterType.HISTORY](films);
@@ -204,28 +190,25 @@ export default class FilmsPresenter {
     }
   }
 
-  // Метод для ренедера прелоадера
   _renderLoading() {
     render(this._filmsSection, this._loadingComponent, InsertPosition.BEFOREEND);
   }
 
-  // Метод для рендера списка с кнопками сортировки фильмов
   _renderSortFilmList() {
     if (this._sortFilmListComponent !== null) {
       this._sortFilmListComponent = null;
     }
 
     this._sortFilmListComponent = new SortFilmList(this._currentSortType);
-
     if (this._getFilms().length) {
       render(this.siteMainElement, this._sortFilmListComponent, InsertPosition.BEFOREEND);
       this._sortFilmListComponent.setSortTypeChangeHandler(this._sortTypeChangeHandler);
     }
   }
 
-  // Метод для рендера всех фильмов
   _renderAllFilms() {
     const films = this._getFilms();
+
     const filmsCount = films.length;
 
     if (!filmsCount) {
@@ -247,7 +230,6 @@ export default class FilmsPresenter {
     }
   }
 
-  // Метод для рендера фильмов с наивысшим рейтингом
   _renderRatedFilms() {
     if (this._filmListRatedComponent !== null && this._filmListRatedContainer !== null) {
       removeComponent(this._filmListRatedComponent);
@@ -261,7 +243,6 @@ export default class FilmsPresenter {
     }
 
     const films = [...this._filmsModel.getRatedFilms()];
-
     if (films[0].filmRating === 0) {
       return;
     }
@@ -275,7 +256,6 @@ export default class FilmsPresenter {
     this._renderFilmCards(this._filmListRatedContainer, films, this._ratedFilmCardPresenter);
   }
 
-  // Метод для рендера фильмов с большим количеством комментариев
   _renderCommentedFilms() {
     if (this._filmListCommentedContainer !== null && this._filmListCommentedComponent !== null) {
       removeComponent(this._filmListCommentedComponent);
@@ -289,7 +269,6 @@ export default class FilmsPresenter {
     }
 
     const films = [...this._filmsModel.getCommentedFilms()];
-
     if (films[0].comments.length === 0) {
       return;
     }
@@ -303,7 +282,6 @@ export default class FilmsPresenter {
       this._filmListCommentedContainer,
       InsertPosition.BEFOREEND,
     );
-
     this._renderFilmCards(
       this._filmListCommentedContainer,
       films,
@@ -311,7 +289,6 @@ export default class FilmsPresenter {
     );
   }
 
-  // Метод для рендера одной карточки фильма
   _renderFilmCard(container, film, filmCardPresenter) {
     const mainFilmCardPresenter = new FilmCardPresenter(
       container,
@@ -320,17 +297,14 @@ export default class FilmsPresenter {
       this._filterType,
       this._api,
     );
-
     filmCardPresenter.set(film.id, mainFilmCardPresenter);
     mainFilmCardPresenter.init(film, film.comments);
   }
 
-  // Метод для рендера нескольких карточек
   _renderFilmCards(container, films, filmCardPresenter) {
     films.forEach((film) => this._renderFilmCard(container, film, filmCardPresenter));
   }
 
-  // Метод для рендера сообщения об отсутствии фильмов в базе данных
   _renderEmptyFilmsMessage() {
     removeComponent(this._filmsList);
     removeComponent(this._filmListRatedComponent);
@@ -340,7 +314,6 @@ export default class FilmsPresenter {
     render(this._filmsSection, this._emptyListComponent, InsertPosition.BEFOREEND);
   }
 
-  // Метод для рендера кнопки "Загрузить еще"
   _renderShowMoreButton() {
     if (this._showMoreButtonComponent !== null) {
       this._showMoreButtonComponent = null;
@@ -352,7 +325,6 @@ export default class FilmsPresenter {
     this._showMoreButtonComponent.setLoadMoreClickHandler(this._showMoreButtonClickHandler);
   }
 
-  // Обработчик для кнопки "Загрузить еще"
   _showMoreButtonClickHandler() {
     const filmsCount = this._getFilms().length;
     const newRenderedFilmsCount = Math.min(
@@ -369,20 +341,17 @@ export default class FilmsPresenter {
     }
   }
 
-  // Метод для рендера счетчика колличества фильмов в базе данных
-  _renderDataFilmsCounter(filmsCount) {
+  _renderDataFilmsCounter() {
+    const filmsCount = this._getFilms();
     this._footerStatsComponent = new FooterStats(filmsCount);
-
     render(this.siteFooterElement, this._footerStatsComponent, InsertPosition.BEFOREEND);
   }
 
-  // Метод для очистки мапов
   _clearCardPresenter(filmCardPresenter) {
     filmCardPresenter.forEach((presenter) => presenter.destroy());
     filmCardPresenter.clear();
   }
 
-  // Метод для очистки карточек фильмов
   _clearFilmList({ resetFilmCounter = false, resetSortType = false } = {}) {
     const filmsCount = this._getFilms().length;
 
@@ -417,10 +386,7 @@ export default class FilmsPresenter {
     }
   }
 
-  // Метод для рендера полного списка карточек
   _renderFilmsSection() {
-    const filmsCount = this._getFilms();
-
     if (this._isLoading) {
       render(this.siteMainElement, this._filmsSection, InsertPosition.BEFOREEND);
       this._renderLoading();
@@ -428,13 +394,11 @@ export default class FilmsPresenter {
     }
 
     this._renderSortFilmList();
-
     render(this.siteMainElement, this._filmsSection, InsertPosition.BEFOREEND);
 
     this._renderAllFilms();
     this._renderRatedFilms();
     this._renderCommentedFilms();
-    this._renderDataFilmsCounter(filmsCount);
-
+    this._renderDataFilmsCounter();
   }
 }

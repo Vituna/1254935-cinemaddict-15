@@ -1,98 +1,16 @@
+import {FilmDurationFormat, FilterType, ZERO_FILMS_COUNT, MIN_FILMS_COUNT, MAX_FILMS_COUNT, ProfileRank, TIME_COUNT} from './const.js';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
 import duration from 'dayjs/plugin/duration.js';
-import {FilmDurationFormat, FilterType, ZERO_FILMS_COUNT, MIN_FILMS_COUNT, MAX_FILMS_COUNT, ProfileRank, TIME_COUNT} from './const.js';
 
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 
-const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
+export const sortByDate = (filmA, filmB) => dayjs(filmB.releaseDate).diff(dayjs(filmA.releaseDate));
 
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
+export const sortByRating = (filmA, filmB) => (filmB.filmRating > filmA.filmRating) ? 1 : -1;
 
-const generateData = (data) => {
-  const randomIndex = getRandomInteger(0, data.length - 1);
-  return data[randomIndex];
-};
-
-const generateDate = () => {
-  const maxDaysGap = 50;
-  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
-
-  return dayjs().add(daysGap, 'day').toDate();
-};
-
-const getRandomNonRepeatingNumbers = (min, max) => {
-  const previousValues = [];
-  let currentValue = getRandomInteger(min, max);
-  if (previousValues.length >= (max - min + 1)) {
-    throw new Error(`Перебраны все числа из диапазона от ${  min  } до ${  max}`);
-  }
-  while (previousValues.includes(currentValue)) {
-    currentValue = getRandomInteger(min, max);
-  }
-  previousValues.push(currentValue);
-  return currentValue;
-};
-
-const getRandomFloat = (min, max) => Math.random() * (max - min) + min;
-
-const getRandomComments = (arr) => {
-  const sortedComments = arr.sort(() => .5 - Math.random());
-  const numberComments = sortedComments.slice(0, getRandomInteger(1, 5));
-  return numberComments;
-};
-
-const generateCountData = (limit, component, date) => {
-  let filmCardList = '';
-  for (let i = 0; i < limit; i++) {
-    filmCardList += component(date[i]);
-  }
-  return filmCardList;
-};
-
-const filterNameToCountFilms = {
-  'All movies': (films) => films.length,
-  'Watchlist': (films) => films
-    .filter((film) => film.watchlist)
-    .length,
-  'History': (films) => films
-    .filter((film) => film.alreadyWatched)
-    .length,
-  'Favorites': (films) => films
-    .filter((film) => film.favorite)
-    .length,
-};
-
-const generateFilters = (films) => Object
-  .entries(filterNameToCountFilms)
-  .map(([filterName, countFilms]) => ({
-    name: filterName,
-    count: countFilms(films),
-  }));
-
-const sortByDate = (filmA, filmB) => dayjs(filmB.releaseDate).diff(dayjs(filmA.releaseDate));
-
-const sortByRating = (filmA, filmB) => (filmB.filmRating > filmA.filmRating) ? 1 : -1;
-
-const updateItem = (items, update) => {
-  const index = items.findIndex((item) => item.id === update.id);
-
-  if (index === -1) {
-    return items;
-  }
-
-  return [
-    ...items.slice(0, index),
-    update,
-    ...items.slice(index + 1),
-  ];
-};
-
-const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+export const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
 export const filter = {
   [FilterType.ALL]: (films) => films.filter((film) => film),
@@ -101,6 +19,7 @@ export const filter = {
   [FilterType.FAVORITES]: (films) => films.filter((film) => film.isFavorite),
   [FilterType.STATS]: (films) => films,
 };
+
 export const getTotalFilmsDuration = (films, format) => {
   const totalDuration = films.reduce((acc, rec) => acc + rec.runtime, 0);
   switch (format) {
@@ -144,12 +63,15 @@ export const getTopGenre = (films) => {
   topGenre.sort((prev, next) => next.count - prev.count);
   return topGenre[0].genre;
 };
+
 export const getFormatDate = (date, format) => dayjs(date).format(format);
+
 export const getDurationTime = (time, type) => {
   const { hours, minutes } = dayjs.duration(time, type).$d;
 
   return `${hours}h ${minutes}m`;
 };
+
 export const getListFromArr = (arr) => arr.join(', ');
 
 export const getRelativeTimeFromDate = (date) => dayjs(date).fromNow();
@@ -175,4 +97,3 @@ export const filterStatsByWatchingDate = (films, period) => {
   const deadline = dayjs().subtract(TIME_COUNT, period);
   return films.filter((movie) => dayjs(movie.watchingDate).diff(deadline, 'minute') > 0);
 };
-export {generateData, generateDate, getRandomInteger, getRandomNonRepeatingNumbers, getRandomFloat, getRandomComments, generateCountData, generateFilters, sortByDate, sortByRating, updateItem, isEscEvent};

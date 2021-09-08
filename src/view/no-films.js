@@ -1,12 +1,5 @@
 import AbstractView from './abstract';
-import {FilterType} from '../utils/const.js';
-
-const NoFilmsListTextType = {
-  [FilterType.ALL]: 'There are no movies in our database',
-  [FilterType.WATCHLIST]: 'There are no movies to watch now',
-  [FilterType.HISTORY]: 'There are no watched movies now',
-  [FilterType.FAVORITES]: 'There are no favorite movies now',
-};
+import {NoFilmsListTextType} from '../utils/const.js';
 
 const createNoFilmsListTemplate = (filterType) => {
   const noFilmsText = NoFilmsListTextType[filterType];
