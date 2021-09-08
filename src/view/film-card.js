@@ -29,16 +29,16 @@ const createFilmCardTemplate = (film) => {
     : 'film-card__controls-item--mark-as-watched';
 
   return `<article class="film-card">
-      <h3 class="film-card__title"  data-popup-open>${title}</h3>
+      <h3 class="film-card__title"  data-is-popup-open>${title}</h3>
       <p class="film-card__rating">${filmRating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${getFormatDate(releaseDate, 'YYYY')}</span>
         <span class="film-card__duration">${getDurationTime(runtime, 'minute')}</span>
         <span class="film-card__genre">${genres[0]}</span>
       </p>
-      <img src="${poster}" alt="${title}" class="film-card__poster"  data-popup-open>
+      <img src="${poster}" alt="${title}" class="film-card__poster"  data-is-popup-open>
       <p class="film-card__description">${description}</p>
-      <a class="film-card__comments" data-popup-open>${comments.length} comments</a>
+      <a class="film-card__comments" data-is-popup-open>${comments.length} comments</a>
       <div class="film-card__controls">
       <button class="film-card__controls-item ${watchlistClass}" type="button">Add to watchlist </button>
       <button class="film-card__controls-item ${viewedClass}" type="button">Mark as watched</button>
@@ -63,7 +63,7 @@ export default class FilmCard extends AbstractView {
   }
 
   _filmCardClickHandler(evt) {
-    const target = evt.target.dataset.popupOpen;
+    const target = evt.target.dataset.isPopupOpen;
 
     if (typeof target !== 'undefined') {
       this._callback.click();
