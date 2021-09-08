@@ -1,20 +1,10 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
+import duration from 'dayjs/plugin/duration.js';
+import {FilmDurationFormat, FilterType, ZERO_FILMS_COUNT, MIN_FILMS_COUNT, MAX_FILMS_COUNT, ProfileRank, TIME_COUNT} from './const.js';
+
 dayjs.extend(relativeTime);
-
-const CARD_COUNT = 5;
-
-const InsertPosition = {
-  AFTERBEGIN: 'afterbegin',
-  AFTEREND: 'afterend',
-  BEFOREEND: 'beforeend',
-};
-
-const SortType = {
-  DEFAULT: 'default',
-  DATE: 'date',
-  RATING: 'rating',
-};
+dayjs.extend(duration);
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -84,9 +74,9 @@ const generateFilters = (films) => Object
     count: countFilms(films),
   }));
 
-const sortByDate = (filmA, filmB) => dayjs(filmB.filmInfo.release.date).diff(dayjs(filmA.filmInfo.release.date));
+const sortByDate = (filmA, filmB) => dayjs(filmB.releaseDate).diff(dayjs(filmA.releaseDate));
 
-const sortByRating = (filmA, filmB) => (filmB.filmInfo.totalRating > filmA.filmInfo.totalRating) ? 1 : -1;
+const sortByRating = (filmA, filmB) => (filmB.filmRating > filmA.filmRating) ? 1 : -1;
 
 const updateItem = (items, update) => {
   const index = items.findIndex((item) => item.id === update.id);
@@ -104,13 +94,85 @@ const updateItem = (items, update) => {
 
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
-const CardMode = {
-  OPEN: 'OPEN',
-  CLOSE: 'CLOSE',
+export const filter = {
+  [FilterType.ALL]: (films) => films.filter((film) => film),
+  [FilterType.WATCHLIST]: (films) => films.filter((film) => film.isWatchlist),
+  [FilterType.HISTORY]: (films) => films.filter((film) => film.isViewed),
+  [FilterType.FAVORITES]: (films) => films.filter((film) => film.isFavorite),
+  [FilterType.STATS]: (films) => films,
+};
+export const getTotalFilmsDuration = (films, format) => {
+  const totalDuration = films.reduce((acc, rec) => acc + rec.runtime, 0);
+  switch (format) {
+    case FilmDurationFormat.HOUR:
+      return dayjs.duration(totalDuration, 'm').format('H');
+    case FilmDurationFormat.MINUTE:
+      return dayjs.duration(totalDuration, 'm').format('m');
+    case FilmDurationFormat.DAY:
+      return dayjs.duration(totalDuration, 'm').format('D');
+  }
 };
 
-const getRelativeTimeFromDate = (date) => dayjs(date).fromNow();
+export const getGenres = (films) => {
+  const genres = new Set();
+  films.forEach((film) => film.genres.forEach((genre) => genres.add(genre)));
+  return genres;
+};
 
-const FILMS_STEP = 5;
+export const countGenres = (films) => {
+  const allFilmsGenres = [];
+  films.forEach((film) => allFilmsGenres.push(...film.genres));
+  const genres = [];
 
-export {CARD_COUNT, InsertPosition, SortType, CardMode, FILMS_STEP, generateData, generateDate, getRandomInteger, getRandomNonRepeatingNumbers, getRandomFloat, getRandomComments, generateCountData, generateFilters, sortByDate, sortByRating, updateItem, isEscEvent, getRelativeTimeFromDate};
+  getGenres(films).forEach((genre) =>
+    genres.push({
+      genre: genre,
+      count: allFilmsGenres.filter((allMoviesgenre) => allMoviesgenre === genre).length,
+    }),
+  );
+  return genres;
+};
+
+export const getGenresCount = (films) => {
+  const count = [];
+  countGenres(films).forEach((genre) => count.push(genre.count));
+  return count;
+};
+
+export const getTopGenre = (films) => {
+  const topGenre = countGenres(films);
+  topGenre.sort((prev, next) => next.count - prev.count);
+  return topGenre[0].genre;
+};
+export const getFormatDate = (date, format) => dayjs(date).format(format);
+export const getDurationTime = (time, type) => {
+  const { hours, minutes } = dayjs.duration(time, type).$d;
+
+  return `${hours}h ${minutes}m`;
+};
+export const getListFromArr = (arr) => arr.join(', ');
+
+export const getRelativeTimeFromDate = (date) => dayjs(date).fromNow();
+
+export const getUserRating = (watchedCount) => {
+  const isNoviceRank = watchedCount > ZERO_FILMS_COUNT && watchedCount <= MIN_FILMS_COUNT;
+  const isFanRank = watchedCount > MIN_FILMS_COUNT && watchedCount <= MAX_FILMS_COUNT;
+  const isMovieBuffRank = watchedCount > MAX_FILMS_COUNT;
+
+  switch (watchedCount) {
+    case isNoviceRank:
+      return ProfileRank.NOVICE;
+    case isFanRank:
+      return ProfileRank.FAN;
+    case isMovieBuffRank:
+      return ProfileRank.MOVIE_BUFF;
+    default:
+      return '';
+  }
+};
+
+export const filterStatsByWatchingDate = (films, period) => {
+  const deadline = dayjs().subtract(TIME_COUNT, period);
+  return films.filter((movie) => dayjs(movie.watchingDate).diff(deadline, 'minute') > 0);
+};
+export {generateData, generateDate, getRandomInteger, getRandomNonRepeatingNumbers, getRandomFloat, getRandomComments, generateCountData, generateFilters, sortByDate, sortByRating, updateItem, isEscEvent};
