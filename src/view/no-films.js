@@ -1,11 +1,23 @@
 import AbstractView from './abstract';
+import {NoFilmsListTextType} from '../utils/const.js';
 
-const createNoFilmsListTemplate = () => (
-  '<h2 class="films-list__title">There are no movies in our database</h2>'
-);
+const createNoFilmsListTemplate = (filterType) => {
+  const noFilmsText = NoFilmsListTextType[filterType];
+
+  return (
+    `<h2 class="films-list__title">${noFilmsText}</h2>`
+  );
+};
+
 
 export default class NoFilms extends AbstractView {
+  constructor(data) {
+    super();
+
+    this._data = data;
+  }
+
   getTemplate() {
-    return createNoFilmsListTemplate();
+    return createNoFilmsListTemplate(this._data);
   }
 }

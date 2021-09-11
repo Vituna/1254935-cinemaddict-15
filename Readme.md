@@ -1,7 +1,7 @@
 # Проект «Киноман»
 
 * Студент: [Viktor Ivanov](https://htmlacademy.ru/profile/id1254935).
-* Наставник: [Кристина Жиделягина](https://htmlacademy.ru/profile/id575159).
+* Наставник: [Елена Грицук](https://htmlacademy.ru/profile/id199079).
 
 ---
 
