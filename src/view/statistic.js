@@ -188,8 +188,12 @@ export default class StatsScreen extends AbstractView {
     return createStatisticTemplate(this._rating, this._currentFilter, this._films);
   }
 
-  restoreHandlers() {
-    this._setChart();
+  _getScrollPositon() {
+    return this.getElement().scrollTop;
+  }
+
+  _setScrollPosition(value) {
+    this.getElement().scrollTop = value;
   }
 
   _filterTypeChangeHandler(evt) {
@@ -197,7 +201,9 @@ export default class StatsScreen extends AbstractView {
       return;
     }
     evt.preventDefault();
+    const scroll = this._getScrollPositon();
     this._callback.filterTypeChange(evt.target.value);
+    this._setScrollPosition(scroll);
   }
 
   _setChart() {

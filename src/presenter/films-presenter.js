@@ -10,15 +10,13 @@ import FilmListView from '../view/film-list';
 import FilmRated from '../view/film-extra-rated.js';
 import FilmCommented from '../view/film-extra-commented.js';
 import ShowMoreButton from '../view/button-show-more.js';
-import FooterStats from '../view/footer-stats.js';
 import FilmCardPresenter from '../presenter/film-card.js';
 import NoFilms from '../view/no-films.js';
 import PreloaderView from '../view/preloader';
 
 export default class FilmsPresenter {
-  constructor(siteMainElement, siteFooterElement, filmsModel, filterModel, api) {
+  constructor(siteMainElement, filmsModel, filterModel, api) {
     this.siteMainElement = siteMainElement;
-    this.siteFooterElement = siteFooterElement;
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
     this._api = api;
@@ -341,12 +339,6 @@ export default class FilmsPresenter {
     }
   }
 
-  _renderDataFilmsCounter() {
-    const filmsCount = this._getFilms();
-    this._footerStatsComponent = new FooterStats(filmsCount);
-    render(this.siteFooterElement, this._footerStatsComponent, InsertPosition.BEFOREEND);
-  }
-
   _clearCardPresenter(filmCardPresenter) {
     filmCardPresenter.forEach((presenter) => presenter.destroy());
     filmCardPresenter.clear();
@@ -399,6 +391,6 @@ export default class FilmsPresenter {
     this._renderAllFilms();
     this._renderRatedFilms();
     this._renderCommentedFilms();
-    this._renderDataFilmsCounter();
+    // this._renderDataFilmsCounter();
   }
 }
