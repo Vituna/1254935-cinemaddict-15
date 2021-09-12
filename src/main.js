@@ -1,4 +1,4 @@
-import {UpdateType, END_POINT, AUTHORIZATION} from './utils/const.js';
+import {UpdateType, END_POINT, AUTHORIZATION} from './utils/constants.js';
 import FilmsModel from './model/films.js';
 import FilterModel from './model/filter.js';
 import Filter from './presenter/filter.js';

@@ -1,5 +1,5 @@
 import {sortByDate, sortByRating, filter, filterStatsByWatchingDate, getUserRating} from '../utils/utils.js';
-import {InsertPosition, SortType, FILMS_STEP, FilterType, Pages, StatsFilterType, UpdateType, UserAction} from '../utils/const.js';
+import {InsertPosition, SortType, FILMS_STEP, FilterType, Pages, StatsFilterType, UpdateType, UserAction} from '../utils/constants.js';
 import {render, removeComponent} from '../utils/render.js';
 import StatsScreenView from '../view/statistic';
 

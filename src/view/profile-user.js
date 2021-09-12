@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import { getUserRating } from '../utils/utils.js';
+import {getUserRating} from '../utils/utils.js';
 
 const createProfileTemplate = (watchedFilms) => (
   `<section class="header__profile profile">

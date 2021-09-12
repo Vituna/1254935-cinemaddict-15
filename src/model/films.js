@@ -1,5 +1,5 @@
 import AbstractObserver from '../utils/abstract-observer.js';
-import {EXTRA_FILM_CARDS_COUNT, TOP_RATED_COUNT} from '../utils/const.js';
+import {EXTRA_FILM_CARDS_COUNT, TOP_RATED_COUNT} from '../utils/constants.js';
 
 export default class Films extends AbstractObserver {
   constructor() {

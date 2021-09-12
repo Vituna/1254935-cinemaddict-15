@@ -1,5 +1,5 @@
 import {isEscEvent} from '../utils/utils.js';
-import {InsertPosition, UpdateType, UserAction, CardMode} from '../utils/const.js';
+import {InsertPosition, UpdateType, UserAction, CardMode, FilterType} from '../utils/constants.js';
 import {removeComponent, render, replace} from '../utils/render.js';
 import FilmCardView from '../view/film-card.js';
 import FilmPopupView from '../view/popup.js';
@@ -125,7 +125,7 @@ export default class FilmCardPresenter {
     if (this._filmPopupComponent) {
       this._scrollPosition = this._filmPopupComponent.getScrollPosition();
     }
-    const currentFilterType = this._filterType === 'All movies' || this._filterType !== 'History';
+    const currentFilterType = this._filterType === FilterType.ALL || this._filterType !== FilterType.HISTORY;
 
     if (!currentFilterType && this._filmPopupComponent) {
       this._hidePopup();
@@ -137,7 +137,7 @@ export default class FilmCardPresenter {
       {
         ...this._film,
         isViewed: !this._film.isViewed,
-        wathingDate: this._film.isViewed ? new Date() : null,
+        watсhingDate: this._film.isViewed ? new Date() : null,
       },
       () => {
         if (this._filmPopupComponent) {
@@ -152,7 +152,7 @@ export default class FilmCardPresenter {
     if (this._filmPopupComponent) {
       this._scrollPosition = this._filmPopupComponent.getScrollPosition();
     }
-    const currentFilterType = this._filterType === 'All movies' || this._filterType !== 'Favorites';
+    const currentFilterType = this._filterType === FilterType.ALL || this._filterType !== FilterType.FAVORITES;
 
     if (!currentFilterType && this._filmPopupComponent) {
       this._hidePopup();
@@ -179,7 +179,7 @@ export default class FilmCardPresenter {
       this._scrollPosition = this._filmPopupComponent.getScrollPosition();
     }
 
-    const currentFilterType = this._filterType === 'All movies' || this._filterType !== 'Watchlist';
+    const currentFilterType = this._filterType === FilterType.ALL || this._filterType !== FilterType.WATCHLIST;
 
     if (!currentFilterType && this._filmPopupComponent) {
       this._hidePopup();
@@ -201,9 +201,9 @@ export default class FilmCardPresenter {
     );
   }
 
-  _commentDeleteClickHandler(id, data, button, buttonList) {
+  _commentDeleteClickHandler(id, data, button, buttonsList) {
     button.textContent = 'Deleting...';
-    buttonList.forEach((btn) => {
+    buttonsList.forEach((btn) => {
       btn.disabled = true;
     });
 
@@ -218,7 +218,7 @@ export default class FilmCardPresenter {
             this._renderFilmPopup(this._film, this._commentsModel.getComments());
             this._filmPopupComponent.getElement().scrollTo(0, data.scrollPosition);
 
-            buttonList.forEach((btn) => {
+            buttonsList.forEach((btn) => {
               btn.disabled = false;
             });
           });
@@ -226,12 +226,12 @@ export default class FilmCardPresenter {
       );
     }).catch(() => {
       button.textContent = 'Delete';
-      buttonList.forEach((btn) => {
+      buttonsList.forEach((btn) => {
         btn.disabled = false;
       });
     });  }
 
-  _commentSubmitHandler(data, input, emotionList) {
+  _commentSubmitHandler(data, input, emotionsList) {
     if (!data.emotion || !data.commentText) {
       return;
     }
@@ -242,7 +242,7 @@ export default class FilmCardPresenter {
     };
 
     input.setAttribute('disabled', 'disabled');
-    emotionList.forEach((emotionItem) => {
+    emotionsList.forEach((emotionItem) => {
       emotionItem.disabled = true;
     });
 
@@ -265,7 +265,7 @@ export default class FilmCardPresenter {
       })
       .catch(() => {
         input.removeAttribute('disabled');
-        emotionList.forEach((emotionItem) => {
+        emotionsList.forEach((emotionItem) => {
           emotionItem.disabled = false;
         });
       });

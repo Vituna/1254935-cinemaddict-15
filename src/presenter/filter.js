@@ -1,6 +1,6 @@
 import {removeComponent, render, replace} from '../utils/render.js';
 import { filter } from '../utils/utils.js';
-import {FilterType, InsertPosition, UpdateType} from '../utils/const.js';
+import {FilterType, InsertPosition, UpdateType} from '../utils/constants.js';
 import Menu from '../view/main-menu.js';
 import UserProfileView from '../view/profile-user.js';
 
@@ -57,7 +57,7 @@ export default class Filter {
   }
 
   _getWatchedFilmsCount() {
-    return this._getFilters().find((item) => item.value === 'History').count;
+    return this._getFilters().find((item) => item.value === FilterType.HISTORY).count;
   }
 
   _getFilters() {
@@ -66,21 +66,21 @@ export default class Filter {
     return [
       {
         type: FilterType.ALL,
-        value: 'All',
+        value: FilterType.ALL,
       },
       {
         type: FilterType.WATCHLIST,
-        value: 'Watchlist',
+        value: FilterType.WATCHLIST,
         count: filter[FilterType.WATCHLIST](films).length,
       },
       {
         type: FilterType.HISTORY,
-        value: 'History',
+        value: FilterType.HISTORY,
         count: filter[FilterType.HISTORY](films).length,
       },
       {
         type: FilterType.FAVORITES,
-        value: 'Favorites',
+        value: FilterType.FAVORITES,
         count: filter[FilterType.FAVORITES](films).length,
       },
     ];

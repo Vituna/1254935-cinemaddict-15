@@ -1,5 +1,5 @@
 import FilmsModel from './model/films.js';
-import {Method} from './utils/const.js';
+import {Method} from './utils/constants.js';
 
 export default class Api {
   constructor(endPoint, authorization) {

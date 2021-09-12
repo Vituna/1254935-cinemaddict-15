@@ -1,5 +1,5 @@
-import {getListFromArr, getDurationTime, getFormatDate, getRelativeTimeFromDate} from '../utils/utils.js';
-import {emojiList} from '../utils/const.js';
+import {getListFromArr, getDurationTime, getFormatDate, getRelativeTimeFromDate, isCtrlEnterEvent} from '../utils/utils.js';
+import {emojis} from '../utils/constants.js';
 import SmartView from './smart.js';
 import he from 'he';
 
@@ -211,7 +211,7 @@ const filmPopupTemplate = (data, commentsItems) => {
             </label>
 
             <div class="film-details__emoji-list">
-              ${generateEmojiList(emotion, emojiList)}
+              ${generateEmojiList(emotion, emojis)}
             </div>
           </div>
           </section>
@@ -308,7 +308,7 @@ export default class FilmPopup extends SmartView {
   }
 
   _commentSubmitHandler(evt) {
-    if (evt.ctrlKey && evt.key === 'Enter') {
+    if (isCtrlEnterEvent(evt)) {
       evt.preventDefault();
 
       const input = this.getElement().querySelector('.film-details__comment-input');

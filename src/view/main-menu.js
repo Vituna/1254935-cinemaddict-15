@@ -1,9 +1,10 @@
 import AbstractView from './abstract';
+import {FilterType} from '../utils/constants.js';
 
-const createFilterCountTemplate = (filters, currentFilterType) => {
-  const { type, value, count } = filters;
+const createFilterCountTemplate = (filter, currentFilterType) => {
+  const { type, value, count } = filter;
 
-  const checkFilmCount = (filmCount) =>
+  const getFilmsCountTemplate = (filmCount) =>
     filmCount >= 0 ? `<span class="main-navigation__item-count">${filmCount}</span>` : '';
 
   return `<a
@@ -12,8 +13,7 @@ const createFilterCountTemplate = (filters, currentFilterType) => {
       data-filter-type="${type}"
     >
       ${type}
-      <!-- Не показывать счетчик фильмов у пункта "All movies" когда фильмов 0 -->
-      ${type === 'All movies' ? '' : checkFilmCount(count)}
+      ${type === FilterType.ALL ? '' : getFilmsCountTemplate(count)}
     </a>`;
 };
 
@@ -27,7 +27,7 @@ const createMainMenuTemplate = (menuItems, currentFilterType) => {
       ${menuItemsTemplate}
     </div>
     <a href="#stats" class="main-navigation__additional
-    ${'Stats' === currentFilterType ? 'main-navigation__item--active' : ''}"
+    ${currentFilterType === FilterType.STATS ? 'main-navigation__item--active' : ''}"
       data-filter-type="Stats"
     >
       Stats

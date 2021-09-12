@@ -1,4 +1,4 @@
-import {FilmDurationFormat, FilterType, ZERO_FILMS_COUNT, MIN_FILMS_COUNT, MAX_FILMS_COUNT, ProfileRank, TIME_COUNT} from './const.js';
+import {FilmDurationFormat, FilterType, ZERO_FILMS_COUNT, MIN_FILMS_COUNT, MAX_FILMS_COUNT, ProfileRank, TIME_COUNT} from './constants.js';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
 import duration from 'dayjs/plugin/duration.js';
@@ -11,6 +11,8 @@ export const sortByDate = (filmA, filmB) => dayjs(filmB.releaseDate).diff(dayjs(
 export const sortByRating = (filmA, filmB) => (filmB.filmRating > filmA.filmRating) ? 1 : -1;
 
 export const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+
+export const isCtrlEnterEvent = (evt) => evt.ctrlKey && evt.key === 'Enter';
 
 export const filter = {
   [FilterType.ALL]: (films) => films.filter((film) => film),
@@ -72,16 +74,16 @@ export const getDurationTime = (time, type) => {
   return `${hours}h ${minutes}m`;
 };
 
-export const getListFromArr = (arr) => arr.join(', ');
+export const getListFromArr = (items) => items.join(', ');
 
 export const getRelativeTimeFromDate = (date) => dayjs(date).fromNow();
 
-export const getUserRating = (watchedCount) => {
-  const isNoviceRank = watchedCount > ZERO_FILMS_COUNT && watchedCount <= MIN_FILMS_COUNT;
-  const isFanRank = watchedCount > MIN_FILMS_COUNT && watchedCount <= MAX_FILMS_COUNT;
-  const isMovieBuffRank = watchedCount > MAX_FILMS_COUNT;
+export const getUserRating = (watchedFilmsCount) => {
+  const isNoviceRank = watchedFilmsCount > ZERO_FILMS_COUNT && watchedFilmsCount <= MIN_FILMS_COUNT;
+  const isFanRank = watchedFilmsCount > MIN_FILMS_COUNT && watchedFilmsCount <= MAX_FILMS_COUNT;
+  const isMovieBuffRank = watchedFilmsCount > MAX_FILMS_COUNT;
 
-  switch (watchedCount) {
+  switch (watchedFilmsCount) {
     case isNoviceRank:
       return ProfileRank.NOVICE;
     case isFanRank:
