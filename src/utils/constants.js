@@ -50,6 +50,7 @@ export const UserAction = {
   UPDATE_FILM: 'UPDATE_FILM',
   ADD_COMMENT: 'ADD_COMMENT',
   DELETE_COMMENT: 'DELETE_COMMENT',
+  UPDATE_POPUP: 'UPDATE_POPUP',
 };
 
 export const StatsFilterType = {
@@ -89,4 +90,4 @@ export const NoFilmsListTextType = {
   [FilterType.FAVORITES]: 'There are no favorite movies now',
 };
 
-
+export const isOnline = () => window.navigator.onLine;

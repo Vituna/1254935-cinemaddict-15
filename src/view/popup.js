@@ -84,16 +84,9 @@ const filmPopupTemplate = (data, commentsItems) => {
     ? 'film-details__control-button--favorite film-details__control-button--active'
     : 'film-details__control-button--favorite';
 
-  const commentItemsTemplate = commentsItems
-    .map((comment) => createCommentItemTemplate(comment))
-    .join('');
-
-  const createCommentsTitle = (commentsLength) =>
-    commentsLength
-      ? `<h3 class="film-details__comments-title">
-          Comments <span class="film-details__comments-count">${commentsLength}</span>
-        </h3>`
-      : '';
+  const commentItemsTemplate = commentsItems ?
+    commentsItems.map((comment) => createCommentItemTemplate(comment)).join('')
+    : '';
 
   const createCommentsList = (commentsItem, itemTemplate) =>
     commentsItem.length
@@ -195,7 +188,9 @@ const filmPopupTemplate = (data, commentsItems) => {
         </section>
         <div class="film-details__bottom-container">
           <section class="film-details__comments-wrap">
-            ${createCommentsTitle(comments.length)}
+            <h3 class="film-details__comments-title">
+              Comments <span class="film-details__comments-count">${comments.length}</span>
+            </h3>
             ${createCommentsList(commentItemsTemplate, commentItemsTemplate)}
             <div class="film-details__new-comment">
             <div class="film-details__add-emoji-label">
@@ -322,7 +317,7 @@ export default class FilmPopup extends SmartView {
   _commentDeleteClickHandler(evt) {
     evt.preventDefault();
     const buttons = this.getElement().querySelectorAll('.film-details__comment-delete');
-    this._callback.deleteComment(evt.target.dataset.commentId, this._data, evt.target, buttons);
+    this._callback.deleteComment(evt.target.dataset.commentId, evt.target, buttons);
   }
 
   setClosePopupClickHandler(callback) {
