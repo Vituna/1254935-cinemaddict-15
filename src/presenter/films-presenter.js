@@ -95,6 +95,11 @@ export default class FilmsPresenter {
             this._rerenderPresenterPopup(this._filmCardPresenter, update);
             this._rerenderPresenterPopup(this._ratedFilmCardPresenter, update);
             this._rerenderPresenterPopup(this._commentedFilmCardPresenter, update);
+          })
+          .catch(() => {
+            this._setShakeStatePresenter(this._filmCardPresenter, update);
+            this._setShakeStatePresenter(this._ratedFilmCardPresenter, update);
+            this._setShakeStatePresenter(this._commentedFilmCardPresenter, update);
           });
         break;
       case UserAction.UPDATE_POPUP:
@@ -126,6 +131,12 @@ export default class FilmsPresenter {
   _rerenderPresenterPopup(presenter, data) {
     if (presenter.has(data.id)) {
       return presenter.get(data.id).rerenderPopup();
+    }
+  }
+
+  _setShakeStatePresenter(presenter, data) {
+    if (presenter.has(data.id)) {
+      return presenter.get(data.id).setShakeState();
     }
   }
 

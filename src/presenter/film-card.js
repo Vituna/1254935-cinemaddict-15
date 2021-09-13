@@ -1,5 +1,5 @@
 import {isEscEvent} from '../utils/utils.js';
-import {InsertPosition, UpdateType, UserAction, CardMode, FilterType} from '../utils/constants.js';
+import {InsertPosition, UpdateType, UserAction, CardMode, FilterType, isOnline} from '../utils/constants.js';
 import {removeComponent, render, replace} from '../utils/render.js';
 import FilmCardView from '../view/film-card.js';
 import FilmPopupView from '../view/popup.js';
@@ -126,7 +126,6 @@ export default class FilmCardPresenter {
       this._scrollPosition = this._filmPopupComponent.getScrollPosition();
     }
     const currentFilterType = this._filterType === FilterType.ALL || this._filterType !== FilterType.HISTORY;
-    // const isAlreadyViewed = this._film.isViewed;
 
     if (!currentFilterType && this._filmPopupComponent) {
       this._hidePopup();
@@ -140,12 +139,6 @@ export default class FilmCardPresenter {
         isViewed: !this._film.isViewed,
         watсhingDate: this._film.isViewed ? new Date() : null,
       },
-      // () => {
-      //   if (this._filmPopupComponent) {
-      //     this._renderFilmPopup(this._film, this._commentsModel.getComments());
-      //     this._filmPopupComponent.getElement().scrollTo(0, this._scrollPosition);
-      //   }
-      // },
     );
   }
 
@@ -166,12 +159,6 @@ export default class FilmCardPresenter {
         ...this._film,
         isFavorite: !this._film.isFavorite,
       },
-      // () => {
-      //   if (this._filmPopupComponent) {
-      //     this._renderFilmPopup(this._film, this._commentsModel.getComments());
-      //     this._filmPopupComponent.getElement().scrollTo(0, this._scrollPosition);
-      //   }
-      // },
     );
   }
 
@@ -193,16 +180,15 @@ export default class FilmCardPresenter {
         ...this._film,
         isWatchlist: !this._film.isWatchlist,
       },
-      // () => {
-      //   if (this._filmPopupComponent) {
-      //     this._renderFilmPopup(this._film, this._commentsModel.getComments());
-      //     this._filmPopupComponent.getElement().scrollTo(0, this._scrollPosition);
-      //   }
-      // },
     );
   }
 
   _commentDeleteClickHandler(id, button, buttonsList) {
+    if (!isOnline()) {
+      this._filmPopupComponent.shake();
+      return;
+    }
+
     if (this._filmPopupComponent) {
       this._scrollPosition = this._filmPopupComponent.getScrollPosition();
     }
@@ -219,6 +205,7 @@ export default class FilmCardPresenter {
         this._film,
       );
     }).catch(() => {
+      this._filmPopupComponent.shake();
       button.textContent = 'Delete';
       buttonsList.forEach((btn) => {
         btn.disabled = false;
@@ -256,7 +243,16 @@ export default class FilmCardPresenter {
         emotionsList.forEach((emotionItem) => {
           emotionItem.disabled = false;
         });
+        this._filmPopupComponent.shake();
       });
+  }
+
+  setShakeState() {
+    if (this._filmPopupComponent) {
+      this._filmPopupComponent.shake();
+    } else {
+      this._filmCardComponent.shake();
+    }
   }
 
   updateComments() {
@@ -270,7 +266,7 @@ export default class FilmCardPresenter {
   rerenderPopup() {
     if (this._filmPopupComponent) {
       this._renderFilmPopup(this._film, this._commentsModel.getComments());
-      this._filmPopupComponent.Element().scrollTo(0, this._scrollPosition);
+      this._filmPopupComponent.getElement().scrollTo(0, this._scrollPosition);
     }
   }
 }

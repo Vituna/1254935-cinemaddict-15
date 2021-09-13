@@ -1,5 +1,5 @@
 import {getListFromArr, getDurationTime, getFormatDate, getRelativeTimeFromDate, isCtrlEnterEvent} from '../utils/utils.js';
-import {emojis} from '../utils/constants.js';
+import {emojis, isOnline} from '../utils/constants.js';
 import SmartView from './smart.js';
 import he from 'he';
 
@@ -306,6 +306,16 @@ export default class FilmPopup extends SmartView {
     if (isCtrlEnterEvent(evt)) {
       evt.preventDefault();
 
+      if (!isOnline()) {
+        this.shake();
+        return;
+      }
+
+      if (!this._data.commentText || !this._data.emotion) {
+        this.shake();
+        return;
+      }
+
       const input = this.getElement().querySelector('.film-details__comment-input');
       const emotionList = this.getElement().querySelectorAll('.film-details__emoji-item');
 
@@ -316,6 +326,12 @@ export default class FilmPopup extends SmartView {
 
   _commentDeleteClickHandler(evt) {
     evt.preventDefault();
+
+    if (!isOnline()) {
+      this.shake();
+      return;
+    }
+
     const buttons = this.getElement().querySelectorAll('.film-details__comment-delete');
     this._callback.deleteComment(evt.target.dataset.commentId, evt.target, buttons);
   }
