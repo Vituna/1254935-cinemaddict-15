@@ -331,9 +331,11 @@ export default class FilmPopup extends SmartView {
       this.shake();
       return;
     }
+    const input = this.getElement().querySelector('.film-details__comment-input');
 
     const buttons = this.getElement().querySelectorAll('.film-details__comment-delete');
-    this._callback.deleteComment(evt.target.dataset.commentId, evt.target, buttons);
+    this._callback.deleteComment(evt.target.dataset.commentId, evt.target, buttons, input);
+
   }
 
   setClosePopupClickHandler(callback) {

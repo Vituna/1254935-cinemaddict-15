@@ -183,7 +183,7 @@ export default class FilmCardPresenter {
     );
   }
 
-  _commentDeleteClickHandler(id, button, buttonsList) {
+  _commentDeleteClickHandler(id, button, buttonsList, input) {
     if (!isOnline()) {
       this._filmPopupComponent.shake();
       return;
@@ -193,6 +193,7 @@ export default class FilmCardPresenter {
       this._scrollPosition = this._filmPopupComponent.getScrollPosition();
     }
 
+    input.setAttribute('disabled', 'disabled');
     button.textContent = 'Deleting...';
     buttonsList.forEach((btn) => {
       btn.disabled = true;
