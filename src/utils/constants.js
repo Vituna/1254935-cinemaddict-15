@@ -50,6 +50,7 @@ export const UserAction = {
   UPDATE_FILM: 'UPDATE_FILM',
   ADD_COMMENT: 'ADD_COMMENT',
   DELETE_COMMENT: 'DELETE_COMMENT',
+  UPDATE_POPUP: 'UPDATE_POPUP',
 };
 
 export const StatsFilterType = {
@@ -71,7 +72,7 @@ export const FilmDurationFormat = {
   DAY: 'day',
 };
 
-export const emojiList = ['angry', 'sleeping', 'puke', 'smile'];
+export const emojis = ['angry', 'sleeping', 'puke', 'smile'];
 
 export const AUTHORIZATION = 'Basic hfgyenhgsqfrtnm456934yh1';
 export const END_POINT = 'https://15.ecmascript.pages.academy/cinemaddict';
@@ -89,4 +90,4 @@ export const NoFilmsListTextType = {
   [FilterType.FAVORITES]: 'There are no favorite movies now',
 };
 
-
+export const isOnline = () => window.navigator.onLine;

@@ -1,4 +1,4 @@
-import {InsertPosition} from './const.js';
+import {InsertPosition} from './constants.js';
 import Abstract from '../view/abstract.js';
 
 export const render = (container, child, place) => {

@@ -1,8 +1,13 @@
 import {getGenres, getGenresCount, getTopGenre, getTotalFilmsDuration } from '../utils/utils.js';
-import {BAR_HEIGHT_SIZE, StatsFilterType, FilmDurationFormat} from '../utils/const.js';
+import {BAR_HEIGHT_SIZE, StatsFilterType, FilmDurationFormat} from '../utils/constants.js';
 import AbstractView from './abstract';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+
+const Color = {
+  YELLOW: '#ffe800',
+  WHITE: '#ffffff',
+};
 
 const renderGenresChart = (statisticCtx, films) => new Chart(statisticCtx, {
   plugins: [ChartDataLabels],
@@ -11,8 +16,8 @@ const renderGenresChart = (statisticCtx, films) => new Chart(statisticCtx, {
     labels: Array.from(getGenres(films)),
     datasets: [{
       data: getGenresCount(films),
-      backgroundColor: '#ffe800',
-      hoverBackgroundColor: '#ffe800',
+      backgroundColor: Color.YELLOW,
+      hoverBackgroundColor: Color.YELLOW,
       anchor: 'start',
       barThickness: 30,
     }],
@@ -23,7 +28,7 @@ const renderGenresChart = (statisticCtx, films) => new Chart(statisticCtx, {
         font: {
           size: 20,
         },
-        color: '#ffffff',
+        color: Color.WHITE,
         anchor: 'start',
         align: 'start',
         offset: 40,
@@ -32,7 +37,7 @@ const renderGenresChart = (statisticCtx, films) => new Chart(statisticCtx, {
     scales: {
       yAxes: [{
         ticks: {
-          fontColor: '#ffffff',
+          fontColor: Color.WHITE,
           padding: 100,
           fontSize: 20,
         },
@@ -183,23 +188,22 @@ export default class StatsScreen extends AbstractView {
     return createStatisticTemplate(this._rating, this._currentFilter, this._films);
   }
 
+  _getScrollPositon() {
+    return this.getElement().scrollTop;
+  }
+
+  _setScrollPosition(value) {
+    this.getElement().scrollTop = value;
+  }
+
   _filterTypeChangeHandler(evt) {
     if (evt.target.tagName !== 'INPUT') {
       return;
     }
     evt.preventDefault();
+    const scroll = this._getScrollPositon();
     this._callback.filterTypeChange(evt.target.value);
-  }
-
-  setFilterTypeChangeHandler(callback) {
-    this._callback.filterTypeChange = callback;
-    this.getElement()
-      .querySelector('.statistic__filters')
-      .addEventListener('click', this._filterTypeChangeHandler);
-  }
-
-  restoreHandlers() {
-    this._setChart();
+    this._setScrollPosition(scroll);
   }
 
   _setChart() {
@@ -209,4 +213,12 @@ export default class StatsScreen extends AbstractView {
     const statisticCtx = this.getElement().querySelector('.statistic__chart');
     this._statisticCart = renderGenresChart(statisticCtx, this._films);
   }
+
+  setFilterTypeChangeHandler(callback) {
+    this._callback.filterTypeChange = callback;
+    this.getElement()
+      .querySelector('.statistic__filters')
+      .addEventListener('click', this._filterTypeChangeHandler);
+  }
+
 }

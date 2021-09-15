@@ -1,8 +1,8 @@
 import {sortByDate, sortByRating, filter, filterStatsByWatchingDate, getUserRating} from '../utils/utils.js';
-import {InsertPosition, SortType, FILMS_STEP, FilterType, Pages, StatsFilterType, UpdateType, UserAction} from '../utils/const.js';
+import {InsertPosition, SortType, FILMS_STEP, FilterType, Pages, StatsFilterType, UpdateType, UserAction} from '../utils/constants.js';
 import {render, removeComponent} from '../utils/render.js';
-import StatsScreenView from '../view/statistic';
 
+import StatsScreenView from '../view/statistic';
 import SortFilmList from '../view/sort.js';
 import FilmSectionView from '../view/film-section';
 import FilmListContainerView from '../view/film-list-container';
@@ -10,15 +10,13 @@ import FilmListView from '../view/film-list';
 import FilmRated from '../view/film-extra-rated.js';
 import FilmCommented from '../view/film-extra-commented.js';
 import ShowMoreButton from '../view/button-show-more.js';
-import FooterStats from '../view/footer-stats.js';
 import FilmCardPresenter from '../presenter/film-card.js';
 import NoFilms from '../view/no-films.js';
 import PreloaderView from '../view/preloader';
 
 export default class FilmsPresenter {
-  constructor(siteMainElement, siteFooterElement, filmsModel, filterModel, api) {
+  constructor(siteMainElement, filmsModel, filterModel, api) {
     this.siteMainElement = siteMainElement;
-    this.siteFooterElement = siteFooterElement;
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
     this._api = api;
@@ -86,21 +84,59 @@ export default class FilmsPresenter {
     return filtredFilms;
   }
 
-  _viewActionHandler(actionType, updateType, update, callback, errCallback) {
+  _viewActionHandler(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
         this._api.updateFilm(update)
           .then((response) => {
             this._filmsModel.updateFilm(updateType, response);
           })
-          .then(callback)
-          .catch(errCallback);
+          .then(() => {
+            this._rerenderPresenterPopup(this._filmCardPresenter, update);
+            this._rerenderPresenterPopup(this._ratedFilmCardPresenter, update);
+            this._rerenderPresenterPopup(this._commentedFilmCardPresenter, update);
+          })
+          .catch(() => {
+            this._setShakeStatePresenter(this._filmCardPresenter, update);
+            this._setShakeStatePresenter(this._ratedFilmCardPresenter, update);
+            this._setShakeStatePresenter(this._commentedFilmCardPresenter, update);
+          });
+        break;
+      case UserAction.UPDATE_POPUP:
+        this._api.updateFilm(update)
+          .then((response) => {
+            this._filmsModel.updateFilm(updateType, response);
+          })
+          .then(() => {
+            this._updatePresenterComments(this._filmCardPresenter, update);
+            this._updatePresenterComments(this._ratedFilmCardPresenter, update);
+            this._updatePresenterComments(this._commentedFilmCardPresenter, update);
+          });
+        break;
     }
   }
 
   _initFilmCardPresenter(presenters, data) {
     if (presenters.has(data.id)) {
       presenters.get(data.id).init(data, data.comments);
+    }
+  }
+
+  _updatePresenterComments(presenter, data) {
+    if (presenter.has(data.id)) {
+      return presenter.get(data.id).updateComments();
+    }
+  }
+
+  _rerenderPresenterPopup(presenter, data) {
+    if (presenter.has(data.id)) {
+      return presenter.get(data.id).rerenderPopup();
+    }
+  }
+
+  _setShakeStatePresenter(presenter, data) {
+    if (presenter.has(data.id)) {
+      return presenter.get(data.id).setShakeState();
     }
   }
 
@@ -341,12 +377,6 @@ export default class FilmsPresenter {
     }
   }
 
-  _renderDataFilmsCounter() {
-    const filmsCount = this._getFilms();
-    this._footerStatsComponent = new FooterStats(filmsCount);
-    render(this.siteFooterElement, this._footerStatsComponent, InsertPosition.BEFOREEND);
-  }
-
   _clearCardPresenter(filmCardPresenter) {
     filmCardPresenter.forEach((presenter) => presenter.destroy());
     filmCardPresenter.clear();
@@ -399,6 +429,5 @@ export default class FilmsPresenter {
     this._renderAllFilms();
     this._renderRatedFilms();
     this._renderCommentedFilms();
-    this._renderDataFilmsCounter();
   }
 }

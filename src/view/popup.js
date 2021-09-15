@@ -1,5 +1,5 @@
-import {getListFromArr, getDurationTime, getFormatDate, getRelativeTimeFromDate} from '../utils/utils.js';
-import {emojiList} from '../utils/const.js';
+import {getListFromArr, getDurationTime, getFormatDate, getRelativeTimeFromDate, isCtrlEnterEvent} from '../utils/utils.js';
+import {emojis, isOnline} from '../utils/constants.js';
 import SmartView from './smart.js';
 import he from 'he';
 
@@ -84,16 +84,9 @@ const filmPopupTemplate = (data, commentsItems) => {
     ? 'film-details__control-button--favorite film-details__control-button--active'
     : 'film-details__control-button--favorite';
 
-  const commentItemsTemplate = commentsItems
-    .map((comment) => createCommentItemTemplate(comment))
-    .join('');
-
-  const createCommentsTitle = (commentsLength) =>
-    commentsLength
-      ? `<h3 class="film-details__comments-title">
-          Comments <span class="film-details__comments-count">${commentsLength}</span>
-        </h3>`
-      : '';
+  const commentItemsTemplate = commentsItems ?
+    commentsItems.map((comment) => createCommentItemTemplate(comment)).join('')
+    : '';
 
   const createCommentsList = (commentsItem, itemTemplate) =>
     commentsItem.length
@@ -195,7 +188,9 @@ const filmPopupTemplate = (data, commentsItems) => {
         </section>
         <div class="film-details__bottom-container">
           <section class="film-details__comments-wrap">
-            ${createCommentsTitle(comments.length)}
+            <h3 class="film-details__comments-title">
+              Comments <span class="film-details__comments-count">${comments.length}</span>
+            </h3>
             ${createCommentsList(commentItemsTemplate, commentItemsTemplate)}
             <div class="film-details__new-comment">
             <div class="film-details__add-emoji-label">
@@ -211,7 +206,7 @@ const filmPopupTemplate = (data, commentsItems) => {
             </label>
 
             <div class="film-details__emoji-list">
-              ${generateEmojiList(emotion, emojiList)}
+              ${generateEmojiList(emotion, emojis)}
             </div>
           </div>
           </section>
@@ -308,8 +303,18 @@ export default class FilmPopup extends SmartView {
   }
 
   _commentSubmitHandler(evt) {
-    if (evt.ctrlKey && evt.key === 'Enter') {
+    if (isCtrlEnterEvent(evt)) {
       evt.preventDefault();
+
+      if (!isOnline()) {
+        this.shake();
+        return;
+      }
+
+      if (!this._data.commentText || !this._data.emotion) {
+        this.shake();
+        return;
+      }
 
       const input = this.getElement().querySelector('.film-details__comment-input');
       const emotionList = this.getElement().querySelectorAll('.film-details__emoji-item');
@@ -321,8 +326,16 @@ export default class FilmPopup extends SmartView {
 
   _commentDeleteClickHandler(evt) {
     evt.preventDefault();
+
+    if (!isOnline()) {
+      this.shake();
+      return;
+    }
+    const input = this.getElement().querySelector('.film-details__comment-input');
+
     const buttons = this.getElement().querySelectorAll('.film-details__comment-delete');
-    this._callback.deleteComment(evt.target.dataset.commentId, this._data, evt.target, buttons);
+    this._callback.deleteComment(evt.target.dataset.commentId, evt.target, buttons, input);
+
   }
 
   setClosePopupClickHandler(callback) {

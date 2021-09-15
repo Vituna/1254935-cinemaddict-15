@@ -1,5 +1,5 @@
 import {isEscEvent} from '../utils/utils.js';
-import {InsertPosition, UpdateType, UserAction, CardMode} from '../utils/const.js';
+import {InsertPosition, UpdateType, UserAction, CardMode, FilterType, isOnline} from '../utils/constants.js';
 import {removeComponent, render, replace} from '../utils/render.js';
 import FilmCardView from '../view/film-card.js';
 import FilmPopupView from '../view/popup.js';
@@ -125,7 +125,7 @@ export default class FilmCardPresenter {
     if (this._filmPopupComponent) {
       this._scrollPosition = this._filmPopupComponent.getScrollPosition();
     }
-    const currentFilterType = this._filterType === 'All movies' || this._filterType !== 'History';
+    const currentFilterType = this._filterType === FilterType.ALL || this._filterType !== FilterType.HISTORY;
 
     if (!currentFilterType && this._filmPopupComponent) {
       this._hidePopup();
@@ -137,13 +137,7 @@ export default class FilmCardPresenter {
       {
         ...this._film,
         isViewed: !this._film.isViewed,
-        wathingDate: this._film.isViewed ? new Date() : null,
-      },
-      () => {
-        if (this._filmPopupComponent) {
-          this._renderFilmPopup(this._film, this._commentsModel.getComments());
-          this._filmPopupComponent.getElement().scrollTo(0, this._scrollPosition);
-        }
+        watсhingDate: this._film.isViewed ? new Date() : null,
       },
     );
   }
@@ -152,7 +146,7 @@ export default class FilmCardPresenter {
     if (this._filmPopupComponent) {
       this._scrollPosition = this._filmPopupComponent.getScrollPosition();
     }
-    const currentFilterType = this._filterType === 'All movies' || this._filterType !== 'Favorites';
+    const currentFilterType = this._filterType === FilterType.ALL || this._filterType !== FilterType.FAVORITES;
 
     if (!currentFilterType && this._filmPopupComponent) {
       this._hidePopup();
@@ -165,12 +159,6 @@ export default class FilmCardPresenter {
         ...this._film,
         isFavorite: !this._film.isFavorite,
       },
-      () => {
-        if (this._filmPopupComponent) {
-          this._renderFilmPopup(this._film, this._commentsModel.getComments());
-          this._filmPopupComponent.getElement().scrollTo(0, this._scrollPosition);
-        }
-      },
     );
   }
 
@@ -179,7 +167,7 @@ export default class FilmCardPresenter {
       this._scrollPosition = this._filmPopupComponent.getScrollPosition();
     }
 
-    const currentFilterType = this._filterType === 'All movies' || this._filterType !== 'Watchlist';
+    const currentFilterType = this._filterType === FilterType.ALL || this._filterType !== FilterType.WATCHLIST;
 
     if (!currentFilterType && this._filmPopupComponent) {
       this._hidePopup();
@@ -192,48 +180,43 @@ export default class FilmCardPresenter {
         ...this._film,
         isWatchlist: !this._film.isWatchlist,
       },
-      () => {
-        if (this._filmPopupComponent) {
-          this._renderFilmPopup(this._film, this._commentsModel.getComments());
-          this._filmPopupComponent.getElement().scrollTo(0, this._scrollPosition);
-        }
-      },
     );
   }
 
-  _commentDeleteClickHandler(id, data, button, buttonList) {
+  _commentDeleteClickHandler(id, button, buttonsList, input) {
+    if (!isOnline()) {
+      this._filmPopupComponent.shake();
+      return;
+    }
+
+    if (this._filmPopupComponent) {
+      this._scrollPosition = this._filmPopupComponent.getScrollPosition();
+    }
+
+    input.setAttribute('disabled', 'disabled');
     button.textContent = 'Deleting...';
-    buttonList.forEach((btn) => {
+    buttonsList.forEach((btn) => {
       btn.disabled = true;
     });
 
     this._api.deleteComment(id).then(() => {
       this._changeData(
-        UserAction.UPDATE_FILM,
+        UserAction.UPDATE_POPUP,
         UpdateType.PATCH,
         this._film,
-        () => {
-          this._api.getCommentsList(this._film).then((response) => {
-            this._commentsModel.setComments(response);
-            this._renderFilmPopup(this._film, this._commentsModel.getComments());
-            this._filmPopupComponent.getElement().scrollTo(0, data.scrollPosition);
-
-            buttonList.forEach((btn) => {
-              btn.disabled = false;
-            });
-          });
-        },
       );
     }).catch(() => {
+      this._filmPopupComponent.shake();
       button.textContent = 'Delete';
-      buttonList.forEach((btn) => {
+      buttonsList.forEach((btn) => {
         btn.disabled = false;
       });
-    });  }
+    });
+  }
 
-  _commentSubmitHandler(data, input, emotionList) {
-    if (!data.emotion || !data.commentText) {
-      return;
+  _commentSubmitHandler(data, input, emotionsList) {
+    if (this._filmPopupComponent) {
+      this._scrollPosition = this._filmPopupComponent.getScrollPosition();
     }
 
     const newComment = {
@@ -242,7 +225,7 @@ export default class FilmCardPresenter {
     };
 
     input.setAttribute('disabled', 'disabled');
-    emotionList.forEach((emotionItem) => {
+    emotionsList.forEach((emotionItem) => {
       emotionItem.disabled = true;
     });
 
@@ -251,23 +234,40 @@ export default class FilmCardPresenter {
     })
       .then(() => {
         this._changeData(
-          UserAction.UPDATE_FILM,
+          UserAction.UPDATE_POPUP,
           UpdateType.PATCH,
           this._film,
-          () => {
-            this._api.getCommentsList(this._film).then((response) => {
-              this._commentsModel.setComments(response);
-              this._renderFilmPopup(this._film, this._commentsModel.getComments());
-              this._filmPopupComponent.getElement().scrollTo(0, data.scrollPosition);
-            });
-          },
         );
       })
       .catch(() => {
         input.removeAttribute('disabled');
-        emotionList.forEach((emotionItem) => {
+        emotionsList.forEach((emotionItem) => {
           emotionItem.disabled = false;
         });
+        this._filmPopupComponent.shake();
       });
+  }
+
+  setShakeState() {
+    if (this._filmPopupComponent) {
+      this._filmPopupComponent.shake();
+    } else {
+      this._filmCardComponent.shake();
+    }
+  }
+
+  updateComments() {
+    this._api.getCommentsList(this._film).then((response) => {
+      this._commentsModel.setComments(response);
+      this._renderFilmPopup(this._film, this._commentsModel.getComments());
+      this._filmPopupComponent.getElement().scrollTo(0, this._scrollPosition);
+    });
+  }
+
+  rerenderPopup() {
+    if (this._filmPopupComponent) {
+      this._renderFilmPopup(this._film, this._commentsModel.getComments());
+      this._filmPopupComponent.getElement().scrollTo(0, this._scrollPosition);
+    }
   }
 }
