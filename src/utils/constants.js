@@ -7,6 +7,8 @@ export const TIME_COUNT = 1;
 export const ZERO_FILMS_COUNT = 0;
 export const MIN_FILMS_COUNT = 20;
 export const MAX_FILMS_COUNT = 20;
+export const MAX_DESCRIPTION_LENGTH = 139;
+
 
 export const InsertPosition = {
   AFTERBEGIN: 'afterbegin',

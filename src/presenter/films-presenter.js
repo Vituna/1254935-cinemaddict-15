@@ -7,12 +7,12 @@ import SortFilmList from '../view/sort.js';
 import FilmSectionView from '../view/film-section';
 import FilmListContainerView from '../view/film-list-container';
 import FilmListView from '../view/film-list';
-import FilmRated from '../view/film-extra-rated.js';
-import FilmCommented from '../view/film-extra-commented.js';
-import ShowMoreButton from '../view/button-show-more.js';
-import FilmCardPresenter from '../presenter/film-card.js';
-import NoFilms from '../view/no-films.js';
+import FilmRatedView from '../view/film-extra-rated.js';
+import FilmCommentedView from '../view/film-extra-commented.js';
+import ShowMoreButtonView from '../view/button-show-more.js';
+import NoFilmsView from '../view/no-films.js';
 import PreloaderView from '../view/preloader';
+import FilmCardPresenter from '../presenter/film-card.js';
 
 export default class FilmsPresenter {
   constructor(siteMainElement, filmsModel, filterModel, api) {
@@ -284,7 +284,7 @@ export default class FilmsPresenter {
     }
 
     this._filmListRatedContainer = new FilmListContainerView();
-    this._filmListRatedComponent = new FilmRated();
+    this._filmListRatedComponent = new FilmRatedView();
 
     render(this._filmsSection, this._filmListRatedComponent, InsertPosition.BEFOREEND);
     render(this._filmListRatedComponent, this._filmListRatedContainer, InsertPosition.BEFOREEND);
@@ -310,7 +310,7 @@ export default class FilmsPresenter {
     }
 
     this._filmListCommentedContainer = new FilmListContainerView();
-    this._filmListCommentedComponent = new FilmCommented();
+    this._filmListCommentedComponent = new FilmCommentedView();
 
     render(this._filmsSection, this._filmListCommentedComponent, InsertPosition.BEFOREEND);
     render(
@@ -346,7 +346,7 @@ export default class FilmsPresenter {
     removeComponent(this._filmListRatedComponent);
     removeComponent(this._filmListCommentedComponent);
 
-    this._emptyListComponent = new NoFilms(this._filterType);
+    this._emptyListComponent = new NoFilmsView(this._filterType);
     render(this._filmsSection, this._emptyListComponent, InsertPosition.BEFOREEND);
   }
 
@@ -355,7 +355,7 @@ export default class FilmsPresenter {
       this._showMoreButtonComponent = null;
     }
 
-    this._showMoreButtonComponent = new ShowMoreButton();
+    this._showMoreButtonComponent = new ShowMoreButtonView();
 
     render(this._filmsList, this._showMoreButtonComponent, InsertPosition.BEFOREEND);
     this._showMoreButtonComponent.setLoadMoreClickHandler(this._showMoreButtonClickHandler);
