@@ -1,6 +1,6 @@
 import {UpdateType, END_POINT, AUTHORIZATION, InsertPosition} from './utils/constants.js';
 import {render} from './utils/render.js';
-import {toast} from './utils/toast.js';
+import {showToast} from './utils/toast.js';
 
 import FilmsModel from './model/films.js';
 import FilterModel from './model/filter.js';
@@ -46,11 +46,11 @@ window.addEventListener('load', () => {
 window.addEventListener('online', () => {
   document.title = document.title.replace(' [offline]', '');
   apiWithProvider.sync();
-  toast('Internet connection restored!!!');
+  showToast('Internet connection restored!!!');
 
 });
 
 window.addEventListener('offline', () => {
   document.title += ' [offline]';
-  toast('Internet connection is disconnected!!!');
+  showToast('Internet connection is disconnected!!!');
 });

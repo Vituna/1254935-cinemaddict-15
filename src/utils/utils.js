@@ -98,3 +98,5 @@ export const filterStatsByWatchingDate = (films, period) => {
   const deadline = dayjs().subtract(TIME_COUNT, period);
   return films.filter((movie) => dayjs(movie.watchingDate).diff(deadline, 'minute') > 0);
 };
+
+export const isOnline = () => window.navigator.onLine;
