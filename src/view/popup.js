@@ -1,5 +1,5 @@
 import {getListFromArr, getDurationTime, getFormatDate, getRelativeTimeFromDate, isCtrlEnterEvent, isOnline} from '../utils/utils.js';
-import {emojis} from '../utils/constants.js';
+import {EMOJES} from '../utils/constants.js';
 import SmartView from './smart.js';
 import he from 'he';
 
@@ -206,7 +206,7 @@ const filmPopupTemplate = (data, commentsItems) => {
             </label>
 
             <div class="film-details__emoji-list">
-              ${generateEmojiList(emotion, emojis)}
+              ${generateEmojiList(emotion, EMOJES)}
             </div>
           </div>
           </section>
