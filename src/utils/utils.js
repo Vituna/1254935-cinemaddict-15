@@ -1,4 +1,4 @@
-import {FilmDurationFormat, FilterType, ZERO_FILMS_COUNT, MIN_FILMS_COUNT, MAX_FILMS_COUNT, ProfileRank, TIME_COUNT} from './constants.js';
+import {FilmDurationFormat, FilterType, ZERO_FILMS_COUNT, MIN_FILMS_COUNT, MAX_FILMS_COUNT, ProfileRank, TIME_COUNT, MAX_DESCRIPTION_LENGTH} from './constants.js';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
 import duration from 'dayjs/plugin/duration.js';
@@ -40,7 +40,7 @@ export const getGenres = (films) => {
   return genres;
 };
 
-export const countGenres = (films) => {
+const countGenres = (films) => {
   const allFilmsGenres = [];
   films.forEach((film) => allFilmsGenres.push(...film.genres));
   const genres = [];
@@ -70,7 +70,6 @@ export const getFormatDate = (date, format) => dayjs(date).format(format);
 
 export const getDurationTime = (time, type) => {
   const { hours, minutes } = dayjs.duration(time, type).$d;
-
   return `${hours}h ${minutes}m`;
 };
 
@@ -98,3 +97,8 @@ export const filterStatsByWatchingDate = (films, period) => {
   const deadline = dayjs().subtract(TIME_COUNT, period);
   return films.filter((movie) => dayjs(movie.watchingDate).diff(deadline, 'minute') > 0);
 };
+
+export const isOnline = () => window.navigator.onLine;
+
+export const lengthDescription = (text) =>
+  text.length >= MAX_DESCRIPTION_LENGTH ? `${text.slice(0, MAX_DESCRIPTION_LENGTH)}...` : text;

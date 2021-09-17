@@ -1,5 +1,5 @@
-import {getListFromArr, getDurationTime, getFormatDate, getRelativeTimeFromDate, isCtrlEnterEvent} from '../utils/utils.js';
-import {emojis, isOnline} from '../utils/constants.js';
+import {getListFromArr, getDurationTime, getFormatDate, getRelativeTimeFromDate, isCtrlEnterEvent, isOnline} from '../utils/utils.js';
+import {emojis} from '../utils/constants.js';
 import SmartView from './smart.js';
 import he from 'he';
 

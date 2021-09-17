@@ -1,12 +1,12 @@
 import {UpdateType, END_POINT, AUTHORIZATION, InsertPosition} from './utils/constants.js';
 import {render} from './utils/render.js';
-import {toast} from './utils/toast.js';
+import {showToast} from './utils/toast.js';
 
 import FilmsModel from './model/films.js';
 import FilterModel from './model/filter.js';
 import Filter from './presenter/filter.js';
-import FooterStats from './view/footer-stats.js';
 import FilmsPresenter from './presenter/films-presenter.js';
+import FooterStatsView from './view/footer-stats.js';
 import Api from './api/api.js';
 import Store from './api/store';
 import Provider from './api/provider';
@@ -32,12 +32,11 @@ new FilmsPresenter(siteMainElement, filmsModel, filterModel, apiWithProvider).in
 apiWithProvider.getFilmsData()
   .then((films) => {
     filmsModel.setFilms(UpdateType.INIT, films);
-    render(siteFooterElement, new FooterStats(filmsModel.getFilms()), InsertPosition.BEFOREEND);
+    render(siteFooterElement, new FooterStatsView(filmsModel.getFilms()), InsertPosition.BEFOREEND);
   })
   .catch(() => {
     filmsModel.setFilms(UpdateType.INIT, []);
   });
-
 
 window.addEventListener('load', () => {
   navigator.serviceWorker.register('/sw.js');
@@ -46,11 +45,11 @@ window.addEventListener('load', () => {
 window.addEventListener('online', () => {
   document.title = document.title.replace(' [offline]', '');
   apiWithProvider.sync();
-  toast('Internet connection restored!!!');
+  showToast('Internet connection restored!!!');
 
 });
 
 window.addEventListener('offline', () => {
   document.title += ' [offline]';
-  toast('Internet connection is disconnected!!!');
+  showToast('Internet connection is disconnected!!!');
 });

@@ -1,6 +1,7 @@
-import {isEscEvent} from '../utils/utils.js';
-import {InsertPosition, UpdateType, UserAction, CardMode, FilterType, isOnline} from '../utils/constants.js';
+import {isEscEvent, isOnline} from '../utils/utils.js';
+import {InsertPosition, UpdateType, UserAction, CardMode, FilterType} from '../utils/constants.js';
 import {removeComponent, render, replace} from '../utils/render.js';
+
 import FilmCardView from '../view/film-card.js';
 import FilmPopupView from '../view/popup.js';
 import CommentsModel from '../model/comments.js';

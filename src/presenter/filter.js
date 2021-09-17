@@ -1,7 +1,8 @@
 import {removeComponent, render, replace} from '../utils/render.js';
 import { filter } from '../utils/utils.js';
 import {FilterType, InsertPosition, UpdateType} from '../utils/constants.js';
-import Menu from '../view/main-menu.js';
+
+import MenuView from '../view/main-menu.js';
 import UserProfileView from '../view/profile-user.js';
 
 export default class Filter {
@@ -26,7 +27,7 @@ export default class Filter {
     const prevFilterComponent = this._filterComponent;
     const prevProfileComponent = this._profileComponent;
 
-    this._filterComponent = new Menu(filters, this._filterModel.getFilter());
+    this._filterComponent = new MenuView(filters, this._filterModel.getFilter());
     this._profileComponent = new UserProfileView(this._getWatchedFilmsCount());
     this._filterComponent.setFilterTypeChangeHandler(this._filterTypeChangeHandler);
 

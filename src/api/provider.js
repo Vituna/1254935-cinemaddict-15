@@ -1,5 +1,5 @@
 import FilmsModel from '../model/films.js';
-import {isOnline} from '../utils/constants.js';
+import {isOnline} from '../utils/utils.js';
 
 const getSyncedFilms = (items) => items
   .filter(({ success }) => success)
