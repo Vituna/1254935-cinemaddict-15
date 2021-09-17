@@ -74,7 +74,7 @@ export const FilmDurationFormat = {
   DAY: 'day',
 };
 
-export const EMOJES = ['angry', 'sleeping', 'puke', 'smile'];
+export const EMOJIS = ['angry', 'sleeping', 'puke', 'smile'];
 
 export const AUTHORIZATION = 'Basic hfgyenhgsqfrtnm456934yh1';
 export const END_POINT = 'https://15.ecmascript.pages.academy/cinemaddict';
