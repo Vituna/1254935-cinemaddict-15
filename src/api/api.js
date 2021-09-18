@@ -7,22 +7,6 @@ export default class Api {
     this._authorization = authorization;
   }
 
-  static checkStatus(response) {
-    if (!response.ok) {
-      throw new Error(`${response.status}: ${response.statusText}`);
-    }
-
-    return response;
-  }
-
-  static toJSON(response) {
-    return response.json();
-  }
-
-  static catchError(err) {
-    throw err;
-  }
-
   sync(data) {
     return this._load({
       url: 'movies/sync',
@@ -77,5 +61,20 @@ export default class Api {
     return fetch(`${this._endPoint}/${url}`, { method, body, headers })
       .then(Api.checkStatus)
       .catch(Api.catchError);
+  }
+
+  static checkStatus(response) {
+    if (!response.ok) {
+      throw new Error(`${response.status}: ${response.statusText}`);
+    }
+    return response;
+  }
+
+  static toJSON(response) {
+    return response.json();
+  }
+
+  static catchError(err) {
+    throw err;
   }
 }

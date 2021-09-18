@@ -1,4 +1,4 @@
-import {UpdateType, END_POINT, AUTHORIZATION, InsertPosition} from './utils/constants.js';
+import {UpdateType, END_POINT, AUTHORIZATION, InsertPosition, STORE_NAME} from './utils/constants.js';
 import {render} from './utils/render.js';
 import {showToast} from './utils/toast.js';
 
@@ -10,10 +10,6 @@ import FooterStatsView from './view/footer-stats.js';
 import Api from './api/api.js';
 import Store from './api/store';
 import Provider from './api/provider';
-
-const STORE_PREFIX = 'cinemaddict-localstorage';
-const STORE_VER = 'v15';
-const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const api = new Api(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);

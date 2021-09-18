@@ -27,9 +27,9 @@ export default class Provider {
         });
     }
 
-    const storeFilms = Object.values(this._store.getItems());
+    const storedFilms = Object.values(this._store.getItems());
 
-    return Promise.resolve(storeFilms.map(FilmsModel.adaptToClient));
+    return Promise.resolve(storedFilms.map(FilmsModel.adaptToClient));
   }
 
   updateFilm(film) {
@@ -85,9 +85,9 @@ export default class Provider {
 
   sync() {
     if (isOnline()) {
-      const storeFilms = Object.values(this._store.getItems());
+      const storedFilms = Object.values(this._store.getItems());
 
-      return this._api.sync(storeFilms)
+      return this._api.sync(storedFilms)
         .then((response) => {
           const updatedFilms = getSyncedFilms(response.updated);
 

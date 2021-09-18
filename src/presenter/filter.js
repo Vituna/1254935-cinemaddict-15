@@ -58,7 +58,7 @@ export default class Filter {
   }
 
   _getWatchedFilmsCount() {
-    return this._getFilters().find((item) => item.value === FilterType.HISTORY).count;
+    return this._getFilters().find((item) => item.type === FilterType.HISTORY).count;
   }
 
   _getFilters() {
@@ -67,11 +67,9 @@ export default class Filter {
     return [
       {
         type: FilterType.ALL,
-        value: FilterType.ALL,
       },
       {
         type: FilterType.WATCHLIST,
-        value: FilterType.WATCHLIST,
         count: filter[FilterType.WATCHLIST](films).length,
       },
       {
@@ -81,7 +79,6 @@ export default class Filter {
       },
       {
         type: FilterType.FAVORITES,
-        value: FilterType.FAVORITES,
         count: filter[FilterType.FAVORITES](films).length,
       },
     ];

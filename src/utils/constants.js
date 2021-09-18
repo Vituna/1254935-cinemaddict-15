@@ -1,4 +1,6 @@
-export const CARD_COUNT = 5;
+const STORE_PREFIX = 'cinemaddict-localstorage';
+const STORE_VER = 'v15';
+
 export const FILMS_STEP = 5;
 export const EXTRA_FILM_CARDS_COUNT = 2;
 export const TOP_RATED_COUNT = 8;
@@ -69,13 +71,14 @@ export const Pages = {
 };
 
 export const FilmDurationFormat = {
-  MINUTE: 'minute',
-  HOUR: 'hour',
-  DAY: 'day',
+  MINUTE: 'm',
+  HOUR: 'H',
+  DAY: 'D',
 };
 
 export const EMOJIS = ['angry', 'sleeping', 'puke', 'smile'];
 
+export const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 export const AUTHORIZATION = 'Basic hfgyenhgsqfrtnm456934yh1';
 export const END_POINT = 'https://15.ecmascript.pages.academy/cinemaddict';
 export const Method = {

@@ -75,7 +75,7 @@ export default class FilmCardPresenter {
     removeComponent(this._filmCardComponent);
   }
 
-  _renderFilmPopup(film) {
+  _renderFilmPopup(film, comments) {
     if (this._filmPopupComponent) {
       this._hidePopup();
     }
@@ -85,7 +85,7 @@ export default class FilmCardPresenter {
       this._filmPopupComponent = null;
     }
 
-    this._filmPopupComponent = new FilmPopupView(film, this._commentsModel.getComments());
+    this._filmPopupComponent = new FilmPopupView(film, comments);
 
     this._showPopup();
     this.body.classList.add('hide-overflow');
@@ -147,7 +147,7 @@ export default class FilmCardPresenter {
     if (this._filmPopupComponent) {
       this._scrollPosition = this._filmPopupComponent.getScrollPosition();
     }
-    const currentFilterType = this._filterType === FilterType.ALL || this._filterType !== FilterType.FAVORITES;
+    const currentFilterType = this._filterType === FilterType.ALL && this._filterType !== FilterType.FAVORITES;
 
     if (!currentFilterType && this._filmPopupComponent) {
       this._hidePopup();

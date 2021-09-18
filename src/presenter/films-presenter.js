@@ -63,25 +63,24 @@ export default class FilmsPresenter {
   _getFilms() {
     this._filterType = this._filterModel.getFilter();
     const films = this._filmsModel.getFilms();
-    const filtredFilms = filter[this._filterType](films);
+    const filteredFilms = filter[this._filterType](films);
 
     this._currentProfileRating = getUserRating(filter[FilterType.HISTORY](films).length);
 
     if (this._filterType === FilterType.STATS) {
       this._currentScreen = Pages.STATS;
-      return filtredFilms;
+      return filteredFilms;
     }
 
     this._currentScreen = Pages.FILMS;
 
     switch (this._currentSortType) {
       case SortType.DATE:
-        return filtredFilms.sort(sortByDate);
+        return filteredFilms.sort(sortByDate);
       case SortType.RATING:
-        return filtredFilms.sort(sortByRating);
+        return filteredFilms.sort(sortByRating);
     }
-
-    return filtredFilms;
+    return filteredFilms;
   }
 
   _viewActionHandler(actionType, updateType, update) {
@@ -122,27 +121,27 @@ export default class FilmsPresenter {
     }
   }
 
-  _updatePresenterComments(presenter, data) {
-    if (presenter.has(data.id)) {
-      return presenter.get(data.id).updateComments();
+  _updatePresenterComments(presenters, data) {
+    if (presenters.has(data.id)) {
+      return presenters.get(data.id).updateComments();
     }
   }
 
-  _rerenderPresenterPopup(presenter, data) {
-    if (presenter.has(data.id)) {
-      return presenter.get(data.id).rerenderPopup();
+  _rerenderPresenterPopup(presenters, data) {
+    if (presenters.has(data.id)) {
+      return presenters.get(data.id).rerenderPopup();
     }
   }
 
-  _setShakeStatePresenter(presenter, data) {
-    if (presenter.has(data.id)) {
-      return presenter.get(data.id).setShakeState();
+  _setShakeStatePresenter(presenters, data) {
+    if (presenters.has(data.id)) {
+      return presenters.get(data.id).setShakeState();
     }
   }
 
   _modelEventHandler(updateType, data) {
     const films = this._filmsModel.getFilms();
-    const filtredFilms = filter[FilterType.HISTORY](films);
+    const filteredFilms = filter[FilterType.HISTORY](films);
 
     switch (updateType) {
       case UpdateType.INIT:
@@ -154,6 +153,7 @@ export default class FilmsPresenter {
         this._initFilmCardPresenter(this._filmCardPresenter, data);
         this._initFilmCardPresenter(this._ratedFilmCardPresenter, data);
         this._initFilmCardPresenter(this._commentedFilmCardPresenter, data);
+        this._renderCommentedFilms();
         break;
       case UpdateType.MINOR:
         this._clearFilmList({ resetFilmCounter: true });
@@ -168,7 +168,7 @@ export default class FilmsPresenter {
             break;
           case Pages.STATS:
             this._currentStatsFilter = StatsFilterType.ALL;
-            this._renderStatsScreen(filtredFilms);
+            this._renderStatsScreen(filteredFilms);
             break;
         }
         break;
@@ -202,26 +202,26 @@ export default class FilmsPresenter {
 
   _statsFilterChangeHandler(value) {
     const films = this._filmsModel.getFilms();
-    const filtredFilms = filter[FilterType.HISTORY](films);
+    const filteredFilms = filter[FilterType.HISTORY](films);
     this._currentStatsFilter = value;
 
     removeComponent(this._statsComponent);
 
     switch (this._currentStatsFilter) {
       case StatsFilterType.ALL:
-        this._renderStatsScreen(filtredFilms);
+        this._renderStatsScreen(filteredFilms);
         break;
       case StatsFilterType.TODAY:
-        this._renderStatsScreen(filterStatsByWatchingDate(filtredFilms, 'd'));
+        this._renderStatsScreen(filterStatsByWatchingDate(filteredFilms, 'd'));
         break;
       case StatsFilterType.WEEK:
-        this._renderStatsScreen(filterStatsByWatchingDate(filtredFilms, 'w'));
+        this._renderStatsScreen(filterStatsByWatchingDate(filteredFilms, 'w'));
         break;
       case StatsFilterType.MONTH:
-        this._renderStatsScreen(filterStatsByWatchingDate(filtredFilms, 'M'));
+        this._renderStatsScreen(filterStatsByWatchingDate(filteredFilms, 'M'));
         break;
       case StatsFilterType.YEAR:
-        this._renderStatsScreen(filterStatsByWatchingDate(filtredFilms, 'y'));
+        this._renderStatsScreen(filterStatsByWatchingDate(filteredFilms, 'y'));
         break;
     }
   }
@@ -313,16 +313,8 @@ export default class FilmsPresenter {
     this._filmListCommentedComponent = new FilmCommentedView();
 
     render(this._filmsSection, this._filmListCommentedComponent, InsertPosition.BEFOREEND);
-    render(
-      this._filmListCommentedComponent,
-      this._filmListCommentedContainer,
-      InsertPosition.BEFOREEND,
-    );
-    this._renderFilmCards(
-      this._filmListCommentedContainer,
-      films,
-      this._commentedFilmCardPresenter,
-    );
+    render(this._filmListCommentedComponent, this._filmListCommentedContainer, InsertPosition.BEFOREEND);
+    this._renderFilmCards(this._filmListCommentedContainer, films, this._commentedFilmCardPresenter);
   }
 
   _renderFilmCard(container, film, filmCardPresenter) {

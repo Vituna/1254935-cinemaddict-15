@@ -25,24 +25,24 @@ const createCommentItemTemplate = (commentsData = {}) => {
   );
 };
 
-const createEmojiItemTemplate = (selectEmoji, emotion) =>
+const createEmojiItemTemplate = (selectedEmoji, emotion) =>
   `<input
       class="film-details__emoji-item visually-hidden"
       name="comment-emoji"
       type="radio"
       id="emoji-${emotion}"
       value="${emotion}"
-      ${selectEmoji === emotion ? 'checked' : ''}
+      ${selectedEmoji === emotion ? 'checked' : ''}
    >
     <label class="film-details__emoji-label" for="emoji-${emotion}">
       <img src="./images/emoji/${emotion}.png" width="30" height="30" alt="emoji">
     </label>
   `;
 
-const generateEmojiList = (selectedEmoji, emotionArr) =>
-  emotionArr.map((emoji) => createEmojiItemTemplate(selectedEmoji, emoji)).join('');
+const generateEmojiList = (selectedEmoji, emotions) =>
+  emotions.map((emoji) => createEmojiItemTemplate(selectedEmoji, emoji)).join('');
 
-const filmPopupTemplate = (data, commentsItems) => {
+const createPopupTemplate = (data, commentsItems) => {
   const {
     comments,
     commentText,
@@ -243,8 +243,14 @@ export default class FilmPopup extends SmartView {
     };
   }
 
+  updateElement() {
+    // this.saveScrollPosition();
+    super.updateElement();
+    // this.restoreScrollPosition();
+  }
+
   getTemplate() {
-    return filmPopupTemplate(this._data, this._comments);
+    return createPopupTemplate(this._data, this._comments);
   }
 
   restoreHandlers() {

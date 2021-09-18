@@ -17,9 +17,7 @@
     "webpack-cli": "3.3.12",
     "webpack-dev-server": "3.11.0"
   },
-  "engines": {
-    "node": "12"
-  },
+  "engines": {},
   "dependencies": {
     "chart.js": "2.9.4",
     "chartjs-plugin-datalabels": "0.7.0",

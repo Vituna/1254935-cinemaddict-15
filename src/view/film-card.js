@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import {getFormatDate, getDurationTime, lengthDescription} from '../utils/utils.js';
+import {getFormatDate, getDurationTime, getDescription} from '../utils/utils.js';
 
 const createFilmCardTemplate = (film) => {
   const {
@@ -37,7 +37,7 @@ const createFilmCardTemplate = (film) => {
         <span class="film-card__genre">${genres[0]}</span>
       </p>
       <img src="${poster}" alt="${title}" class="film-card__poster"  data-is-popup-open>
-      <p class="film-card__description">${lengthDescription(description)}</p>
+      <p class="film-card__description">${getDescription(description)}</p>
       <a class="film-card__comments" data-is-popup-open>${comments.length} comments</a>
       <div class="film-card__controls">
       <button class="film-card__controls-item ${watchlistClass}" type="button">Add to watchlist </button>
