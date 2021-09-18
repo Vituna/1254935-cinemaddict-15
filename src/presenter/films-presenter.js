@@ -153,7 +153,6 @@ export default class FilmsPresenter {
         this._initFilmCardPresenter(this._filmCardPresenter, data);
         this._initFilmCardPresenter(this._ratedFilmCardPresenter, data);
         this._initFilmCardPresenter(this._commentedFilmCardPresenter, data);
-        this._renderCommentedFilms();
         break;
       case UpdateType.MINOR:
         this._clearFilmList({ resetFilmCounter: true });

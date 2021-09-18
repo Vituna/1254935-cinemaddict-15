@@ -74,7 +74,6 @@ export default class Filter {
       },
       {
         type: FilterType.HISTORY,
-        value: FilterType.HISTORY,
         count: filter[FilterType.HISTORY](films).length,
       },
       {

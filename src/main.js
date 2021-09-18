@@ -11,6 +11,10 @@ import Api from './api/api.js';
 import Store from './api/store';
 import Provider from './api/provider';
 
+const siteHeaderElement = document.querySelector('.header');
+const siteMainElement = document.querySelector('.main');
+const siteFooterElement = document.querySelector('.footer');
+
 const api = new Api(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);
 const apiWithProvider = new Provider(api, store);
@@ -18,9 +22,6 @@ const apiWithProvider = new Provider(api, store);
 const filmsModel = new FilmsModel();
 const filterModel = new FilterModel();
 
-const siteHeaderElement = document.querySelector('.header');
-const siteMainElement = document.querySelector('.main');
-const siteFooterElement = document.querySelector('.footer');
 
 new Filter(siteHeaderElement, siteMainElement, filterModel, filmsModel).init();
 new FilmsPresenter(siteMainElement, filmsModel, filterModel, apiWithProvider).init();
