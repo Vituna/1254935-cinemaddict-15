@@ -243,12 +243,6 @@ export default class FilmPopup extends SmartView {
     };
   }
 
-  updateElement() {
-    // this.saveScrollPosition();
-    super.updateElement();
-    // this.restoreScrollPosition();
-  }
-
   getTemplate() {
     return createPopupTemplate(this._data, this._comments);
   }

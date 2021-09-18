@@ -147,7 +147,7 @@ export default class FilmCardPresenter {
     if (this._filmPopupComponent) {
       this._scrollPosition = this._filmPopupComponent.getScrollPosition();
     }
-    const currentFilterType = this._filterType === FilterType.ALL && this._filterType !== FilterType.FAVORITES;
+    const currentFilterType = this._filterType === FilterType.ALL || this._filterType !== FilterType.FAVORITES;
 
     if (!currentFilterType && this._filmPopupComponent) {
       this._hidePopup();
