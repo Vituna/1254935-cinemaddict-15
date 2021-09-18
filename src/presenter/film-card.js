@@ -138,7 +138,7 @@ export default class FilmCardPresenter {
       {
         ...this._film,
         isViewed: !this._film.isViewed,
-        watсhingDate: this._film.isViewed ? new Date() : null,
+        watchingDate: this._film.isViewed ? new Date() : null,
       },
     );
   }

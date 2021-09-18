@@ -188,7 +188,7 @@ export default class StatsScreen extends AbstractView {
     return createStatisticTemplate(this._rating, this._currentFilter, this._films);
   }
 
-  _getScrollPositon() {
+  _getScrollPosition() {
     return this.getElement().scrollTop;
   }
 
@@ -201,7 +201,7 @@ export default class StatsScreen extends AbstractView {
       return;
     }
     evt.preventDefault();
-    const scroll = this._getScrollPositon();
+    const scroll = this._getScrollPosition();
     this._callback.filterTypeChange(evt.target.value);
     this._setScrollPosition(scroll);
   }

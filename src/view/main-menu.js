@@ -70,11 +70,4 @@ export default class Menu extends AbstractView {
     this._callback.filterTypeChange = callback;
     this.getElement().addEventListener('click', this._filterTypeChangeHandler);
   }
-
-  setStatsScreenClickHandler(callback) {
-    this._callback.statsClick = callback;
-    this.getElement()
-      .querySelector('.main-navigation__additional')
-      .addEventListener('click', this._statsScreenClickHandler);
-  }
 }
